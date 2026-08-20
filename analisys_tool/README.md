@@ -1,10 +1,9 @@
 # Verificação neuro-simbólica de extrações por LLM
 
-Componente **simbólico** do pipeline neuro-simbólico descrito na documentação da IC
 *"Integração de pipelines neuro-simbólicos na extração e estruturação de dados com LLM"*
 (ICMC/USP).
 
-O componente **neural** é o [`extraction_tool`](../extraction_tool): o `gpt-4o-mini`
+O componente **neural** é o [`extraction_tool`](../extraction_tool): a LLM
 lê a página e devolve registros estruturados. Esta ferramenta recebe essa saída e
 executa a **verificação factual explícita pós-geração**: cada afirmação gerada é
 confrontada diretamente com a estrutura e o conteúdo do HTML de origem, produzindo
@@ -161,9 +160,6 @@ valor alucinado. Registros marcados por `R-REGISTRO-INFUNDADO` **não recebem su
 alguma**: preencher um item que não existe na página com valores de outros itens seria
 apenas trocar uma fabricação por outra.
 
-No exemplo incluído, das 10 afirmações reprovadas 4 recebem correção ancorada
-(ISBN, editora e preço do item correto, ano correto) e 6 viram abstenção explícita.
-
 ## Métricas
 
 Sobre a extração: taxa de ancoragem, de suporte parcial, de alucinação e de abstenção
@@ -238,14 +234,6 @@ with open(html_file, 'w', encoding='utf-8') as f:
 
 O modo `lote` já procura por `{task_id}.html` e cai no `_text.txt` quando ele não existe.
 
-## Testes
-
-```bash
-python -m unittest discover -s testes -t .
-```
-
-75 testes, sem dependências externas. Quatro deles rodam sobre a extração real
-de `exemplos/`, como regressão de ponta a ponta.
 
 ## Limitações conhecidas
 
