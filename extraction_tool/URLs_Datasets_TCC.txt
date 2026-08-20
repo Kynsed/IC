@@ -1,0 +1,189 @@
+Dataset - Livros:
+=================
+Data das Buscas: (25/06/2025)
+=============================
+https://www.livrariacultura.com.br/o-banquete-42987643/p
+https://www.livrariacultura.com.br/fedon-29181705/p
+https://www.livrariacultura.com.br/totem-e-tabu-2011332004/p
+https://www.livrariacultura.com.br/memorias-do-subsolo-2112320231/p
+https://www.livrariacultura.com.br/memorias-postumas-de-bras-cubas-2112357559/p
+https://www.livrariacultura.com.br/dom-casmurro-58469/p
+https://www.livrariacultura.com.br/o-velho-e-o-mar-42134379/p
+https://www.livrariacultura.com.br/as-vinhas-da-ira-2012148165/p
+https://www.livrariacultura.com.br/o-cortico-2112357490/p
+https://www.livrariacultura.com.br/raizes-do-brasil-42863004/p
+https://www.livrariacultura.com.br/o-estrangeiro-156646/p
+https://www.livrariacultura.com.br/sidarta-2012807000/p
+https://www.livrariacultura.com.br/grande-sertao-veredas-2111919155/p
+https://www.livrariacultura.com.br/etica-spinoza-892193301/p
+https://www.livrariacultura.com.br/a-republica-2112019407/p
+https://www.livrariacultura.com.br/politica-2111851200/p
+https://www.livrariacultura.com.br/fausto-893051354/p
+https://www.livrariacultura.com.br/memorial-do-convento-nova-edicao-2112276574/p
+https://www.livrariacultura.com.br/poesias-reunidas-2012994612/p
+https://www.livrariacultura.com.br/antologia-poetica-manuel-bandeira-30772302/p
+
+Data das Buscas: (17/07/2025)
+=============================
+https://www.livrariacultura.com.br/os-buddenbrook-46134189/p
+https://www.livrariacultura.com.br/anna-karenina-2112245808/p
+https://www.livrariacultura.com.br/a-montanha-magica-46354204/p
+https://www3.livrariacultura.com.br/por-quem-os-sinos-dobram-42202266/p
+https://www.livrariacultura.com.br/casa-grande-senzala-722208/p
+https://www.livrariacultura.com.br/a-divina-comedia-2112281393/p
+https://www3.livrariacultura.com.br/os-sertoes-46490704/p
+https://www3.livrariacultura.com.br/discurso-do-metodo-7026622/p
+https://www3.livrariacultura.com.br/os-irmaos-karamazov-2112061395/p
+https://www.livrariacultura.com.br/guerra-e-paz--graphic-novel--2112369662/p
+
+Data das Buscas: (20/09/2025)
+=============================
+https://www.livrariacultura.com.br/1984-2112283061/p
+https://www.livrariacultura.com.br/a-casa-dos-espiritos-46741718/p
+https://www.livrariacultura.com.br/a-cidade-do-sol-15061167/p
+https://www3.livrariacultura.com.br/a-etica-protestante-e-o-espirito-do-capitalismo-42154594/p
+https://www3.livrariacultura.com.br/a-hora-da-estrela-2112281834/p
+https://www3.livrariacultura.com.br/a-insustentavel-leveza-do-ser-46490844/p
+https://www3.livrariacultura.com.br/a-obra-de-arte-na-era-de-sua-reprodutibilidade-tecnica-47905771/p
+https://www3.livrariacultura.com.br/a-origem-da-familia-da-propriedade-privada-e-do-estado-2112270879/p
+https://www3.livrariacultura.com.br/a-riqueza-das-nacoes-2112300984/p
+https://www3.livrariacultura.com.br/sociedade-do-espetaculo-a-85573/p
+
+
+
+Dataset - Artigos Científicos:
+=============================
+
+Biblioteca Digital de Trabalhos Acadêmicos da USP
+=================================================
+(Busca por "Inteligência Artificial")
+
+Data das Buscas: (21/09/2025)
+=============================
+https://bdta.abcd.usp.br/item/003195462 	O uso da inteligência artificial na Nutrição: uma pesquisa empírica exploratória sobre a aplicação de I.A. na Prática Clínica e na análise preditiva
+https://bdta.abcd.usp.br/item/003189364		Proteção de dados pessoais na era da inteligência artificial
+https://bdta.abcd.usp.br/item/003207886		Uso de inteligência artificial no desenvolvimento de fármacos
+https://bdta.abcd.usp.br/item/003201302		Inteligência artificial e música
+https://bdta.abcd.usp.br/item/003059560		Aplicação da inteligência artificial nas indústrias farmacêuticas (2020)
+https://bdta.abcd.usp.br/item/003245158		Explorando a Inteligência Artificial na gestão de estoques em armazén
+https://bdta.abcd.usp.br/item/003264150		Inteligência Artificial em análise de churn em telecomunicações
+https://bdta.abcd.usp.br/item/003124035		Aplicação de técnicas de inteligência artificial para apoiar a elaboração de decisões judiciais trabalhistas de 1ª grau
+https://bdta.abcd.usp.br/item/003191092		Inteligência artificial na predição da doença de Parkinson
+https://bdta.abcd.usp.br/item/003226324		Utilização da Inteligência Artificial na detecção das doenças periodontais: Mapeamento Sistemático
+
+
+IEEE Explore
+============
+(Busca por "Artificial Intelligence", ordenado por Relevância)
+
+Data das Buscas: (21/09/2025)
+=============================
+https://ieeexplore.ieee.org/document/9781007		How do we move towards true artificial intelligence
+https://ieeexplore.ieee.org/document/10730338		Patient Attitude on the Application of Artificial Intelligence in Diabetes Care
+https://ieeexplore.ieee.org/document/9718926		Construction of Enterprise Business Management Analysis Framework in the Development of Artificial Intelligence
+https://ieeexplore.ieee.org/document/9797546		Application and existing problems of computer network technology in the field of artificial intelligence
+https://ieeexplore.ieee.org/document/9793310		A Review on Artificial Intelligence with Deep Human Reasoning
+https://ieeexplore.ieee.org/document/9750746		The Risks and Countermeasures of Accounting Artificial Intelligence    (Erro: Trouxe mais Artigos da area "More Like This")
+https://ieeexplore.ieee.org/document/10729894		Research on the Application of Artificial Intelligence in Hotels
+https://ieeexplore.ieee.org/document/9719110		Analysis on the application of artificial intelligence in marketing
+https://ieeexplore.ieee.org/document/10285175		Application of artificial intelligence in computer network technology
+https://ieeexplore.ieee.org/document/9534539		Applications, Risks and Countermeasures of Artificial Intelligence in Education
+
+
+
+Arxiv.org:
+==========
+(Busca por "RAG", ordenado por Relevância)
+
+Data das Buscas: (21/09/2025)
+=============================
+https://arxiv.org/abs/2509.00877		EviNote-RAG: Enhancing RAG Models via Answer-Supportive Evidence Notes
+https://arxiv.org/abs/2509.00449		GOSU: Retrieval-Augmented Generation with Global-Level Optimized Semantic Unit-Centric Framework
+https://arxiv.org/abs/2509.01092		REFRAG: Rethinking RAG based Decoding
+https://arxiv.org/abs/2509.01088		Privacy-Preserving Reasoning with Knowledge-Distilled Parametric Retrieval Augmented Generation
+https://arxiv.org/abs/2509.04642		Maestro: Joint Graph & Config Optimization for Reliable AI Agents
+https://arxiv.org/abs/2509.00798		Multimodal Iterative RAG for Knowledge Visual Question Answering	(Revised Date)
+https://arxiv.org/abs/2509.00100		MODE: Mixture of Document Experts for RAG
+https://arxiv.org/abs/2509.04716		KERAG: Knowledge-Enhanced Retrieval-Augmented Generation for Advanced Question Answering
+https://arxiv.org/abs/2509.04502		VaccineRAG: Boosting Multimodal Large Language Models' Immunity to Harmful RAG Samples
+https://arxiv.org/abs/2509.06650		Domain-Aware RAG: MoL-Enhanced RL for Efficient Training and Scalable Retrieval
+https://arxiv.org/abs/2509.07403		LongEmotion: Measuring Emotional Intelligence of Large Language Models in Long-Context Interaction
+
+
+
+Dataset - Canais Youtube:
+=========================
+
+Data do acesso aos canais: (21/09/2025)
+=======================================
+https://www.youtube.com/@MBAIABigDataUSP/videos 	(Canal em Português)
+https://www.youtube.com/@CienciaTodoDia/videos		(Canal em Português)
+https://www.youtube.com/@CanalUSP/videos		(Canal em Português) 
+https://www.youtube.com/@legiaourbana5229/videos	(Canal em Português) 
+https://www.youtube.com/@CaetanoVelosoOficial/videos	(Canal em Português) 
+https://www.youtube.com/@tvunicamp/videos		(Canal em Português)
+https://www.youtube.com/@MARISAMONTE/videos		(Canal em Português)
+https://www.youtube.com/@palavracantada/videos		(Canal em Português)
+https://www.youtube.com/c/Metr%C3%B3polesTV/videos	(Canal em Português)
+https://www.youtube.com/@melodysheep/videos		(Canal em Inglês)
+https://www.youtube.com/@CoolWorldsLab/videos  		(Canal em Inglês)
+https://www.youtube.com/@SabineHossenfelder/videos 	(Canal em Inglês)
+https://www.youtube.com/@matthew_berman/videos 		(Canal em Inglês)
+https://www.youtube.com/@pbsspacetime/videos		(Canal em Inglês)
+https://www.youtube.com/@NASA/videos 			(Canal em Inglês)
+https://www.youtube.com/@EuropeanSpaceAgency/videos	(Canal em Inglês)
+https://www.youtube.com/@Shakira/videos			(Canal em Inglês) 
+https://www.youtube.com/@skillmake/videos		(Canal em Inglês)
+https://www.youtube.com/@BBCEarthScience/videos		(Canal em Inglês)
+
+
+Dataset - Sites e-Commerce:
+===========================
+(Os mesmos tipos de produtos foram buscados em ambos os sites)
+
+Magazine Luiza: (data das Buscas 23/09/2025)
+============================================
+https://www.magazineluiza.com.br/busca/televisor+smart+4k+lg/			
+https://www.magazineluiza.com.br/busca/televisor+smart+4k+samsung/			
+https://www.magazineluiza.com.br/busca/geladeira+duplex+frost+free+electrolux/ 	
+https://www.magazineluiza.com.br/busca/geladeira+duplex+frost+free+bradestemp/ 	
+https://www.magazineluiza.com.br/busca/microondas+electrolux/			
+https://www.magazineluiza.com.br/busca/microondas+brastemp/			
+https://www.magazineluiza.com.br/busca/liquidificador+mondial/		
+https://www.magazineluiza.com.br/busca/liquidificador+philco/		
+https://www.magazineluiza.com.br/busca/ventilador+arno+40cm/			
+https://www.magazineluiza.com.br/busca/ventilador+mondial+40cm/	
+
+Amazon: (data das Buscas 26/09/2025)
+====================================
+https://www.amazon.com.br/s?k=televisor+smart+4k+LG&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2B83B37453HFK&sprefix=televisor+smart+4k+lg%2Caps%2C215&ref=nb_sb_noss
+https://www.amazon.com.br/s?k=tv+smart+4k+samsung&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2DACB865P7ZDY&sprefix=tv+smart+4k+samsung%2Caps%2C758&ref=nb_sb_noss_1
+https://www.amazon.com.br/s?k=geladeira+duplex+frost+free+electrolux&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=36NY4FHHEN3G1&sprefix=geladeira+duplex+frost+free+electrolux%2Caps%2C463&ref=nb_sb_noss_1
+https://www.amazon.com.br/s?k=geladeira+duplex+frost+free+bradestemp&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1I2L8DIOSRHTN&sprefix=geladeira+duplex+frost+free+bradestemp%2Caps%2C460&ref=nb_sb_noss
+https://www.amazon.com.br/s?k=microondas+electrolux&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3NF6I63LSLGE8&sprefix=microondas+electrolux%2Caps%2C313&ref=nb_sb_noss_1
+https://www.amazon.com.br/s?k=liquidificador+mondial&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3HZUI5CGE9V3L&sprefix=liquidificador+mondial%2Caps%2C419&ref=nb_sb_noss_1
+https://www.amazon.com.br/s?k=liquidificador+philco&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=L3GOPM9LJUH8&sprefix=liquidificador+philco%2Caps%2C292&ref=nb_sb_noss_1
+https://www.amazon.com.br/s?k=ventilador+arno+40cm&crid=24WBTI5GOX2MJ&sprefix=ventilador%2Barno%2B40cm%2Caps%2C446&ref=nb_sb_ss_ts-doa-p_1_20
+https://www.amazon.com.br/s?k=ventilador+mondial+40cm&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1E8RY84QIBDW7&sprefix=ventilador+mondial+40cm%2Caps%2C212&ref=nb_sb_noss_1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

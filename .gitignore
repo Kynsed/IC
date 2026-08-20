@@ -1,0 +1,21 @@
+# Chaves de API — nunca versionar
+.env
+*.key
+
+# Saídas geradas em execução
+extraction_tool/results/
+extraction_tool/uploads/
+relatorios/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Configuracao local do Claude Code
+.claude/settings.local.json

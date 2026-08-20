@@ -1,0 +1,7 @@
+# O núcleo de verificação (CLI + biblioteca) roda apenas com a biblioteca
+# padrão do Python 3.9+. Nenhuma dependência de BeautifulSoup, Selenium,
+# pandas ou de qualquer cliente de LLM.
+#
+# Flask é necessário somente para a interface web opcional:
+#     python verificar.py servidor --porta 5001
+flask>=2.2
