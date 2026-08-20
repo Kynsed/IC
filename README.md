@@ -29,17 +29,3 @@ cd ../analisys_tool && python verificar.py lote --dir ../extraction_tool/results
 
 Instruções detalhadas em [extraction_tool/README.md](extraction_tool/README.md) e
 [analisys_tool/README.md](analisys_tool/README.md).
-
-## Chaves de API
-
-Nenhuma credencial é versionada. A chave do Gemini é informada na interface a cada
-sessão; a da OpenAI vem de `OPENAI_API_KEY`, opcionalmente via um `.env` local
-(ignorado pelo git).
-
-## Testes
-
-```bash
-cd analisys_tool && python -m unittest discover -s testes -t .
-```
-
-77 testes, sem dependências externas.
