@@ -1,0 +1,1690 @@
+{
+  "name": "IC synthetic factual verification benchmark",
+  "version": 1,
+  "synthetic": true,
+  "provenance": "Fixtures autorais sintéticas construídas a partir dos oito cenários solicitados na revisão. Não são dados CIL, dados pessoais reais nem respostas de modelos. Gold e decisões esperadas são declarações manuais independentes das funções do verificador.",
+  "limitations": [
+    "Corpus pequeno e sintético, sem estimativa de desempenho em dados CIL ou respostas reais de LLM.",
+    "Mesmos exemplos motivaram o desenvolvimento: conjunto de regressão público, não conjunto de teste independente para alegar generalização.",
+    "Exact-match de folhas JSON com identidades explícitas; variantes corretas exigem gold normalizado explicitamente.",
+    "Decisões PARCIAL, INVALIDA, NAO_VERIFICAVEL, ABSTENCAO e ERRO_EXTRACAO permanecem fora das três classes factuais conclusivas; a cobertura acompanha as métricas condicionais.",
+    "Após reparo deve ser avaliado contra o mesmo gold independente; melhorar precisão por abstenção pode reduzir recall."
+  ],
+  "cases": [
+    {
+      "id": "01_correct",
+      "tags": [
+        "required_1",
+        "article"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        }
+      ],
+      "target_scope": "Somente Maria; João é distrator."
+    },
+    {
+      "id": "02_extrinsic",
+      "tags": [
+        "required_2"
+      ],
+      "source": "<html><body><article><h2>Nome: Maria</h2></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": null
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 25
+        }
+      ],
+      "target_scope": "Maria; idade não aparece na fonte."
+    },
+    {
+      "id": "03_intrinsic",
+      "tags": [
+        "required_3",
+        "article"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        },
+        {
+          "quote": "Idade: 45",
+          "source_offset": 119
+        }
+      ],
+      "target_scope": "Somente Maria; 45 pertence a João."
+    },
+    {
+      "id": "04_duplicate_context",
+      "tags": [
+        "required_4"
+      ],
+      "source": "<html><body><article><h2>Nome: Maria</h2><p>Idade: 30</p><p>Casa: 45</p><p>Cidade: Recife</p></article><article><h2>Nome: João</h2><p>Idade: 45</p><p>Cidade: Recife</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "cidade": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45,
+          "cidade": "Recife"
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30,
+          "cidade": "Recife"
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        },
+        {
+          "record": 0,
+          "field": "cidade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Casa: 45",
+          "source_offset": 60
+        },
+        {
+          "quote": "Idade: 45",
+          "source_offset": 134
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 44
+        }
+      ],
+      "target_scope": "Maria; número 45 aparece como casa de Maria e idade de João."
+    },
+    {
+      "id": "05_normalization",
+      "tags": [
+        "required_5"
+      ],
+      "source": "<html><body><article><p>Nome: João  da Silva</p><p>Data: 15/03/2019</p><p>Preço: R$ 1.234,56</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "data": {
+              "type": "string"
+            },
+            "preco": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "JOAO DA SILVA",
+          "data": "2019-03-15",
+          "preco": "1234.56"
+        }
+      ],
+      "gold": [
+        {
+          "nome": "JOAO DA SILVA",
+          "data": "2019-03-15",
+          "preco": "1234.56"
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "data",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "preco",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "João  da Silva",
+          "source_offset": 30
+        },
+        {
+          "quote": "15/03/2019",
+          "source_offset": 57
+        },
+        {
+          "quote": "R$ 1.234,56",
+          "source_offset": 81
+        }
+      ],
+      "normalization_policy": "Neste caso, gold declara explicitamente as formas canônicas aceitas de nome/data/preço; não são inferidas pelo avaliador. Moeda BRL herdada do campo anotado."
+    },
+    {
+      "id": "06_absent_null",
+      "tags": [
+        "required_6"
+      ],
+      "source": "<html><body><article><h2>Nome: Maria</h2></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": null
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": null
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ABSTENCAO"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 25
+        }
+      ]
+    },
+    {
+      "id": "07_nested_intrinsic",
+      "tags": [
+        "required_7",
+        "nested"
+      ],
+      "source": "<html><body><main><h1>Grupo: família</h1><article><p>Nome: Maria</p><p>Idade: 30</p></article><article><p>Nome: João</p><p>Idade: 45</p></article></main></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "grupo": {
+              "type": "string"
+            },
+            "pessoas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "idade": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "nome"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "grupo",
+            "pessoas"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": {
+        "/": [
+          "grupo"
+        ],
+        "/pessoas": [
+          "nome"
+        ]
+      },
+      "before": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "Maria",
+              "idade": 45
+            },
+            {
+              "nome": "João",
+              "idade": 30
+            }
+          ]
+        }
+      ],
+      "gold": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "Maria",
+              "idade": 30
+            },
+            {
+              "nome": "João",
+              "idade": 45
+            }
+          ]
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "grupo",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 53
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 71
+        },
+        {
+          "quote": "Nome: João",
+          "source_offset": 106
+        },
+        {
+          "quote": "Idade: 45",
+          "source_offset": 123
+        }
+      ]
+    },
+    {
+      "id": "08_layout_table_correct",
+      "tags": [
+        "required_8",
+        "table"
+      ],
+      "source": "<html><body><table><tr><th>Nome</th><th>Idade</th></tr><tr><td>Maria</td><td>30</td></tr><tr><td>João</td><td>45</td></tr></table></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "<td>Maria</td><td>30</td>",
+          "source_offset": 59
+        }
+      ]
+    },
+    {
+      "id": "09_layout_table_intrinsic",
+      "tags": [
+        "required_8",
+        "table"
+      ],
+      "source": "<html><body><table><tr><th>Nome</th><th>Idade</th></tr><tr><td>Maria</td><td>30</td></tr><tr><td>João</td><td>45</td></tr></table></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "<td>Maria</td><td>30</td>",
+          "source_offset": 59
+        },
+        {
+          "quote": "<td>João</td><td>45</td>",
+          "source_offset": 93
+        }
+      ]
+    },
+    {
+      "id": "10_text_intrinsic",
+      "tags": [
+        "required_3",
+        "text"
+      ],
+      "source": "Nome: Maria\nIdade: 30\n\nNome: João\nIdade: 45",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria\nIdade: 30",
+          "source_offset": 0
+        },
+        {
+          "quote": "Nome: João\nIdade: 45",
+          "source_offset": 23
+        }
+      ],
+      "limitation": "Modo texto pode se abster de concluir associação; uma decisão PARCIAL conta como inconclusiva, não como detecção correta."
+    },
+    {
+      "id": "11_inline_intrinsic",
+      "tags": [
+        "required_8",
+        "inline"
+      ],
+      "source": "<html><body><p>Maria — 30 anos</p><p>João — 45 anos</p></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Maria — 30 anos",
+          "source_offset": 15
+        },
+        {
+          "quote": "João — 45 anos",
+          "source_offset": 37
+        }
+      ]
+    },
+    {
+      "id": "12_more_than_five_occurrences",
+      "tags": [
+        "duplicate_over_five",
+        "required_4"
+      ],
+      "source": "<html><body><article><h2>Nome: Pessoa0</h2><p>Cidade: Recife</p><p>Idade: 30</p></article><article><h2>Nome: Pessoa1</h2><p>Cidade: Recife</p><p>Idade: 31</p></article><article><h2>Nome: Pessoa2</h2><p>Cidade: Recife</p><p>Idade: 32</p></article><article><h2>Nome: Pessoa3</h2><p>Cidade: Recife</p><p>Idade: 33</p></article><article><h2>Nome: Pessoa4</h2><p>Cidade: Recife</p><p>Idade: 34</p></article><article><h2>Nome: Pessoa5</h2><p>Cidade: Recife</p><p>Idade: 35</p></article><article><h2>Nome: Pessoa6</h2><p>Cidade: Recife</p><p>Idade: 36</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "cidade": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Pessoa6",
+          "cidade": "Recife",
+          "idade": 36
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Pessoa6",
+          "cidade": "Recife",
+          "idade": 36
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "cidade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Pessoa6",
+          "source_offset": 493
+        },
+        {
+          "quote": "Idade: 36",
+          "source_offset": 535
+        }
+      ],
+      "target_scope": "Somente Pessoa6, cujo contexto aparece depois de seis ocorrências de Recife."
+    },
+    {
+      "id": "13_negation",
+      "tags": [
+        "negation"
+      ],
+      "source": "<html><body><article><h1>Nome: Maria</h1><p>Maria não recebeu R$ 100.</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "descricao": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "descricao": "Maria recebeu R$ 100."
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "descricao": "Maria não recebeu R$ 100."
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "descricao",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Maria não recebeu R$ 100.",
+          "source_offset": 44
+        }
+      ],
+      "gold_error_category": "intrinsic_contradiction",
+      "decision_rationale": "NAO_SUPORTADA expressa ausência de suporte para a proposição positiva; o corpus não confunde essa negação com erro de associação DOM."
+    },
+    {
+      "id": "14_currency_identity",
+      "tags": [
+        "currency"
+      ],
+      "source": "<html><body><article><h1>Nome: Produto A</h1><p>Preço: R$ 100,00</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "preco": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Produto A",
+          "preco": "US$ 100,00"
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Produto A",
+          "preco": "R$ 100,00"
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "preco",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Preço: R$ 100,00",
+          "source_offset": 48
+        }
+      ],
+      "gold_error_category": "intrinsic_currency_distortion"
+    },
+    {
+      "id": "15_missing_field",
+      "tags": [
+        "omission"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria"
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        }
+      ],
+      "target_scope": "Somente Maria; idade 30 é obrigatória para o gold factual embora opcional no schema de transporte."
+    },
+    {
+      "id": "16_missing_record",
+      "tags": [
+        "omission"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        },
+        {
+          "nome": "João",
+          "idade": 45
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        },
+        {
+          "quote": "Nome: João",
+          "source_offset": 101
+        },
+        {
+          "quote": "Idade: 45",
+          "source_offset": 119
+        }
+      ],
+      "proposed_after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        },
+        {
+          "nome": "João",
+          "idade": 45
+        }
+      ],
+      "intervention_provenance": "Intervenção sintética correta, fornecida para testar avaliação. Não é saída do reparador."
+    },
+    {
+      "id": "17_reordered_records",
+      "tags": [
+        "reorder"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "João",
+          "idade": 45
+        },
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        },
+        {
+          "nome": "João",
+          "idade": 45
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Nome: João",
+          "source_offset": 101
+        }
+      ]
+    },
+    {
+      "id": "18_harmful_intervention",
+      "tags": [
+        "bad_repair"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        }
+      ],
+      "proposed_after": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "intervention_provenance": "Intervenção sintética nociva deliberada; mede se o avaliador detecta perda e introdução de erro. Não é saída do reparador."
+    },
+    {
+      "id": "19_extra_record",
+      "tags": [
+        "extra_record"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        },
+        {
+          "nome": "Pedro",
+          "idade": 50
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "nome",
+          "decision": "NAO_SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "idade",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        }
+      ],
+      "target_scope": "Somente Maria. Pedro e idade 50 não aparecem na fonte."
+    },
+    {
+      "id": "20_nested_reordered",
+      "tags": [
+        "nested",
+        "reorder"
+      ],
+      "source": "<html><body><main><h1>Grupo: família</h1><article><p>Nome: Maria</p><p>Idade: 30</p></article><article><p>Nome: João</p><p>Idade: 45</p></article></main></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "grupo": {
+              "type": "string"
+            },
+            "pessoas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "idade": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "nome"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "grupo",
+            "pessoas"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": {
+        "/": [
+          "grupo"
+        ],
+        "/pessoas": [
+          "nome"
+        ]
+      },
+      "before": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "João",
+              "idade": 45
+            },
+            {
+              "nome": "Maria",
+              "idade": 30
+            }
+          ]
+        }
+      ],
+      "gold": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "Maria",
+              "idade": 30
+            },
+            {
+              "nome": "João",
+              "idade": 45
+            }
+          ]
+        }
+      ],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "grupo",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 53
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 71
+        },
+        {
+          "quote": "Nome: João",
+          "source_offset": 106
+        },
+        {
+          "quote": "Idade: 45",
+          "source_offset": 123
+        }
+      ]
+    },
+    {
+      "id": "21_required_field_missing",
+      "tags": [
+        "contract_missing_required"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome",
+            "idade"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria"
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        }
+      ],
+      "target_scope": "Somente Maria; avaliar rejeicao contratual antes do detector factual.",
+      "expected_contract_valid": false
+    },
+    {
+      "id": "22_wrong_scalar_type",
+      "tags": [
+        "contract_type"
+      ],
+      "source": "<html><body><article id=\"maria\"><h2>Nome: Maria</h2><p>Idade: 30</p></article><article id=\"joao\"><h2>Nome: João</h2><p>Idade: 45</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome",
+            "idade"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": "30"
+        }
+      ],
+      "gold": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "expected_decisions": [],
+      "gold_evidence": [
+        {
+          "quote": "Nome: Maria",
+          "source_offset": 36
+        },
+        {
+          "quote": "Idade: 30",
+          "source_offset": 55
+        }
+      ],
+      "target_scope": "Somente Maria; avaliar rejeicao contratual antes do detector factual.",
+      "expected_contract_valid": false
+    },
+    {
+      "id": "23_token_boundaries",
+      "tags": [
+        "token_boundary",
+        "numeric_boundary"
+      ],
+      "source": "<html><body><article><h2>Nome: Mariana</h2><p>Idade: 130</p></article></body></html>",
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string"
+            },
+            "idade": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "entity_keys": [
+        "nome"
+      ],
+      "before": [
+        {
+          "nome": "Ana",
+          "idade": 30
+        }
+      ],
+      "gold": [],
+      "expected_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "NAO_SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "gold_evidence": [],
+      "target_scope": "Ana nao consta na fonte. Mariana e idade 130 sao distratores."
+    }
+  ],
+  "config": {
+    "data_referencia": "2026-10-05"
+  }
+}

@@ -68,6 +68,7 @@ class Coesao:
     campos_ancorados: List[str]
     campos_fora: List[str]
     aplicavel: bool
+    chunks_ancora: List[int] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------

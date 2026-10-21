@@ -219,11 +219,24 @@ class _DomBuilder(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         tag = tag.lower()
+        # Células/linhas podem conter spans ainda abertos quando chega uma
+        # nova célula/linha. Fechar o ancestral no escopo da mesma tabela,
+        # preservando os tr que são pais das células.
+        if tag in {"tr", "td", "th"}:
+            wanted = {"tr"} if tag == "tr" else {"td", "th"}
+            boundary = {"table"} if tag == "tr" else {"table", "tr"}
+            for current in reversed(self._stack[1:]):
+                current_tag = self.nodes[current].tag
+                if current_tag in wanted:
+                    self._close(current)
+                    break
+                if current_tag in boundary:
+                    break
         # fechamentos implícitos
         while len(self._stack) > 1:
             top = self.nodes[self._current].tag
-            closes = IMPLIED_CLOSE.get(top, set())
-            if tag in closes or (top == "p" and tag in _BLOCK_CLOSES_P):
+            closes = IMPLIED_CLOSE.get(tag, set())
+            if top in closes or (top == "p" and tag in _BLOCK_CLOSES_P):
                 self._close(self._current)
             else:
                 break

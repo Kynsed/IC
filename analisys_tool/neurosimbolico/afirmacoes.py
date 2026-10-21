@@ -13,6 +13,8 @@ nome do campo (léxico PT/EN) e depois pela forma do valor.
 from __future__ import annotations
 
 import csv
+import copy
+import io
 import json
 import re
 from dataclasses import dataclass, field
@@ -28,6 +30,7 @@ from .normalizacao import (
     tokenize,
     word_count,
 )
+from .contrato import ContractError, loads_json, validate_records, validate_schema
 
 __all__ = ["Afirmacao", "Registro", "carregar_registros", "decompor"]
 
@@ -94,6 +97,12 @@ class Afirmacao:
     valor_base: Optional[str] = None
     abstencao: bool = False
     erro_extracao: bool = False
+    caminho: tuple = ()
+    campo_original: str = ""
+    escopo: tuple = ()
+    valor_bruto: Any = None
+    identidade: bool = False
+    rotulos_fonte: tuple = ()
 
     @property
     def id(self) -> str:
@@ -105,7 +114,7 @@ class Afirmacao:
 
     @property
     def derivada(self) -> bool:
-        return self.base_derivacao is not None and bool(self.valor_base)
+        return self.base_derivacao is not None
 
 
 @dataclass
@@ -220,33 +229,51 @@ def _achatar(valor: Any) -> str:
 # Decomposição
 # ---------------------------------------------------------------------------
 
-def decompor(registros: Sequence[Dict[str, Any]]) -> List[Registro]:
+def decompor(registros: Sequence[Dict[str, Any]], schema=None) -> List[Registro]:
     """Converte a lista de registros extraídos em afirmações atômicas."""
+    if schema is not None:
+        validate_records(registros, schema)
+    registros = normalizar_registros(registros)
     saida: List[Registro] = []
     for indice, dados in enumerate(registros):
-        if not isinstance(dados, dict):
-            dados = {"valor": dados}
-        registro = Registro(indice=indice, dados=dados)
-        for campo, bruto in dados.items():
+        registro = Registro(indice=indice, dados=copy.deepcopy(dados))
+
+        def visitar(bruto, caminho, contrato, pai):
+            if isinstance(bruto, dict) and bruto:
+                for chave, item in bruto.items():
+                    visitar(item, caminho + (chave,), contrato.get("properties", {}).get(chave, {}), bruto)
+                return
+            if isinstance(bruto, list) and bruto:
+                for pos, item in enumerate(bruto):
+                    visitar(item, caminho + (pos,), contrato.get("items", {}), bruto)
+                return
+            if not caminho:
+                return
+            campo = str(caminho[-1]) if isinstance(caminho[-1], str) else str(caminho[-2])
+            identificador = nome_caminho(caminho)
             valor = _achatar(bruto).strip()
             abstencao = is_abstention(valor)
             erro = is_extraction_error(valor)
             tipo = "texto" if (abstencao or erro) else inferir_tipo(campo, valor)
-            base = _campo_base(campo, dados)
-            valor_base = _achatar(dados.get(base)).strip() if base else None
+            base = _campo_base(campo, pai) if isinstance(pai, dict) else None
+            valor_base = _achatar(pai.get(base)).strip() if base else None
             if valor_base and is_abstention(valor_base):
                 valor_base = None
             registro.afirmacoes.append(Afirmacao(
                 registro=indice,
-                campo=campo,
+                campo=identificador,
                 valor=valor,
                 tipo=tipo,
-                rotulos=_rotulos(campo, tipo),
-                base_derivacao=base,
+                rotulos=_rotulos(campo, tipo) + contrato.get("x-source-labels", []),
+                base_derivacao=nome_caminho(caminho[:-1] + (base,)) if base else None,
                 valor_base=valor_base,
                 abstencao=abstencao,
                 erro_extracao=erro,
+                caminho=caminho, campo_original=campo, escopo=caminho[:-1],
+                valor_bruto=copy.deepcopy(bruto), identidade=contrato.get("x-entity-key", False),
+                rotulos_fonte=tuple(contrato.get("x-source-labels", [])),
             ))
+        visitar(dados, (), (schema or {}).get("items", {}), None)
         saida.append(registro)
     return saida
 
@@ -255,7 +282,62 @@ def decompor(registros: Sequence[Dict[str, Any]]) -> List[Registro]:
 # Carregamento da saída do extraction_tool
 # ---------------------------------------------------------------------------
 
-def carregar_registros(caminho: str | Path) -> List[Dict[str, Any]]:
+def nome_caminho(caminho):
+    if len(caminho) == 1 and not str(caminho[0]).startswith("/"):
+        return str(caminho[0])
+    return "/" + "/".join(str(p).replace("~", "~0").replace("/", "~1") for p in caminho)
+
+
+def normalizar_registros(dados):
+    if isinstance(dados, dict):
+        for chave in ("extracted_data", "dados_extraidos", "data", "resultados", "results", "registros"):
+            if isinstance(dados.get(chave), list):
+                dados = dados[chave]
+                break
+        else:
+            dados = [dados]
+    if not isinstance(dados, list) or any(not isinstance(d, dict) for d in dados):
+        raise ContractError("Extração deve ser uma lista de objetos JSON.")
+    if any(any(not isinstance(k, str) for k in d) for d in dados):
+        raise ContractError("Campos devem ter nomes textuais.")
+    return dados
+
+
+def ler_registros(texto, formato="json", schema=None):
+    if schema is not None:
+        validate_schema(schema)
+    if formato == "json":
+        dados = loads_json(texto)
+        if schema is not None:
+            validate_records(dados, schema)
+        dados = normalizar_registros(dados)
+    elif formato == "csv":
+        leitor = csv.DictReader(io.StringIO(texto, newline=""), strict=True)
+        nomes = leitor.fieldnames
+        if not nomes or any(not n for n in nomes) or len(nomes) != len(set(nomes)):
+            raise ContractError("CSV exige cabeçalho não vazio e sem campos duplicados.")
+        dados = list(leitor)
+        if any(None in linha or any(v is None for v in linha.values()) for linha in dados):
+            raise ContractError("Linha CSV tem quantidade de células diferente do cabeçalho.")
+        if schema is not None:
+            props = schema.get("items", {}).get("properties", {})
+            for linha in dados:
+                for chave, texto_celula in linha.items():
+                    tipos = props.get(chave, {}).get("type", [])
+                    tipos = [tipos] if isinstance(tipos, str) else tipos
+                    if tipos == ["string"]:
+                        continue
+                    if "string" in tipos:
+                        raise ContractError(f"CSV ambíguo para {chave}: use JSON para união com string.")
+                    linha[chave] = loads_json(texto_celula)
+    else:
+        raise ContractError("Formato deve ser json ou csv.")
+    if schema is not None:
+        validate_records(dados, schema)
+    return dados
+
+
+def carregar_registros(caminho: str | Path, schema=None) -> List[Dict[str, Any]]:
     """
     Lê a saída do extraction_tool.
 
@@ -266,16 +348,4 @@ def carregar_registros(caminho: str | Path) -> List[Dict[str, Any]]:
     caminho = Path(caminho)
     texto = caminho.read_text(encoding="utf-8-sig")
 
-    if caminho.suffix.lower() == ".csv":
-        linhas = list(csv.DictReader(texto.splitlines()))
-        return [dict(linha) for linha in linhas]
-
-    dados = json.loads(texto)
-    if isinstance(dados, dict):
-        for chave in ("extracted_data", "dados_extraidos", "data", "resultados", "results"):
-            if isinstance(dados.get(chave), list):
-                return dados[chave]
-        return [dados]
-    if isinstance(dados, list):
-        return dados
-    raise ValueError(f"Formato não reconhecido em {caminho}")
+    return ler_registros(texto, "csv" if caminho.suffix.lower() == ".csv" else "json", schema)

@@ -1,521 +1,831 @@
-// main.js - Script para o Web Scraper com Integração LLM
+// main.js - Script para o Web Scraper com Integração LLM (Apenas Gemini)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos do DOM
     const scraperForm = document.getElementById('scraper-form');
     const urlInput = document.getElementById('url');
     const pageImageInput = document.getElementById('page-image');
     const fieldsInput = document.getElementById('fields');
+    const schemaInput = document.getElementById('schema-json');
+    const auditDownloads = document.getElementById('audit-downloads');
     const modelProviderSelect = document.getElementById('model-provider');
+    const thinkingLevelSelect = document.getElementById('thinking-level');
     const geminiKeyInput = document.getElementById('gemini-api-key');
     const geminiKeyContainer = document.getElementById('gemini-key-container');
     const useMockCheckbox = document.getElementById('use-mock');
     const submitBtn = document.getElementById('submit-btn');
     const testLLMBtn = document.getElementById('test-llm-btn');
-    
+
     const statusContainer = document.getElementById('status-container');
     const statusBadge = document.getElementById('status-badge');
     const progressBar = document.getElementById('progress-bar');
     const statusMessage = document.getElementById('status-message');
     const checkStatusBtn = document.getElementById('check-status-btn');
-    
+
     const resultContainer = document.getElementById('result-container');
-    const resultTable = document.getElementById('result-table');
-    const resultHeaders = document.getElementById('result-headers');
+    let resultHeaders = document.getElementById('result-headers');
     const resultBody = document.getElementById('result-body');
     const downloadCSVBtn = document.getElementById('download-csv-btn');
     const downloadJSONBtn = document.getElementById('download-json-btn');
     const downloadTextBtn = document.getElementById('download-text-btn');
     const newExtractionBtn = document.getElementById('new-extraction-btn');
-    
-    // Variáveis globais
+
+    const SUPPORTED_GEMINI_MODELS = new Set([
+        'gemini-3.8-flash',
+        'gemini-3.7-flash',
+        'gemini-3.6-flash'
+    ]);
+
     let currentTaskId = null;
     let pollingInterval = null;
     let extractedData = null;
-    
-    // Verificar se o modelo selecionado exige uma imagem para funcionar.
-    // Os modelos Gemini não entram aqui: são multimodais e aceitam texto puro,
-    // passando a analisar a imagem apenas quando uma é enviada.
-    function isVisionModel() {
-        return modelProviderSelect.value === 'openai-vision';
-    }
-    
-    // Verificar se o modelo selecionado é do Google Gemini
+
     function isGeminiModel() {
-        return modelProviderSelect.value.toLowerCase().startsWith('gemini');
+        return SUPPORTED_GEMINI_MODELS.has(modelProviderSelect.value);
     }
 
-    
-    // Mostrar o campo da chave apenas quando um modelo Gemini está selecionado
     function updateProviderFields() {
         if (geminiKeyContainer) {
-            geminiKeyContainer.style.display = isGeminiModel() ? 'block' : 'none';
+            geminiKeyContainer.style.display = isGeminiModel()
+                ? 'block'
+                : 'none';
         }
+        updateThinkingLevels();
     }
-    
-    // Validar entradas do formulário
+
+    function updateThinkingLevels() {
+        const selected = thinkingLevelSelect.value;
+        const levels = [
+            ['default', 'Padrão do modelo'],
+            ['minimal', 'Minimal'],
+            ['low', 'Low'],
+            ['medium', 'Medium'],
+            ['high', 'High']
+        ].filter(([value]) => value !== 'minimal' || modelProviderSelect.value === 'gemini-3.6-flash');
+
+        thinkingLevelSelect.replaceChildren();
+        levels.forEach(([value, label]) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            thinkingLevelSelect.appendChild(option);
+        });
+        thinkingLevelSelect.value = levels.some(([value]) => value === selected) ? selected : 'default';
+    }
+
     function validateForm() {
-        // Verificar se pelo menos URL ou imagem foi fornecida (a menos que use-mock esteja marcado)
-        if (!useMockCheckbox.checked && !urlInput.value && !pageImageInput.files.length) {
-            alert('Por favor, forneça uma URL ou uma imagem da página web (ou marque "Usar dados de exemplo").');
+        if (!isGeminiModel()) {
+            alert(
+                'Modelo não suportado. ' +
+                'Selecione Gemini 3.8 Flash, Gemini 3.7 Flash ou Gemini 3.6 Flash.'
+            );
             return false;
         }
-        
-        // Se um modelo de visão for selecionado, verificar se uma imagem foi fornecida
-        if (isVisionModel() && !pageImageInput.files.length && !useMockCheckbox.checked) {
-            alert('O modelo de visão requer uma imagem. Por favor, carregue uma imagem ou selecione outro modelo.');
+
+        if (
+            !useMockCheckbox.checked &&
+            !urlInput.value &&
+            !pageImageInput.files.length
+        ) {
+            alert(
+                'Por favor, forneça uma URL ou uma imagem da página web ' +
+                '(ou marque "Usar dados de exemplo").'
+            );
             return false;
         }
-        
-        // Verificar se os campos para extração foram especificados
-        if (!fieldsInput.value) {
-            alert('Por favor, especifique os campos que deseja extrair.');
+
+        if (schemaInput.value.trim()) {
+            try {
+                JSON.parse(schemaInput.value);
+            } catch (_) {
+                alert('O schema precisa ser um JSON válido.');
+                return false;
+            }
+        }
+
+        if (
+            !fieldsInput.value.trim() &&
+            !schemaInput.value.trim()
+        ) {
+            alert(
+                'Por favor, especifique os campos que deseja extrair.'
+            );
             return false;
         }
-        
+
         return true;
     }
-    
-    // Desabilitar campos do formulário durante o processamento
+
     function disableFormFields() {
         urlInput.disabled = true;
         pageImageInput.disabled = true;
         fieldsInput.disabled = true;
+        schemaInput.disabled = true;
         modelProviderSelect.disabled = true;
-        if (geminiKeyInput) geminiKeyInput.disabled = true;
+        thinkingLevelSelect.disabled = true;
+
+        if (geminiKeyInput) {
+            geminiKeyInput.disabled = true;
+        }
+
         useMockCheckbox.disabled = true;
         submitBtn.disabled = true;
         testLLMBtn.disabled = true;
-        
-        // Adicionar classe visual para indicar que o formulário está em modo somente leitura
-        scraperForm.closest('.card').classList.add('form-readonly');
-        
-        // Atualizar texto do botão
-        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Processando...';
+
+        const card = scraperForm.closest('.card');
+
+        if (card) {
+            card.classList.add('form-readonly');
+        }
+
+        submitBtn.innerHTML =
+            '<i class="bi bi-hourglass-split me-2"></i>Processando...';
     }
-    
-    // Resetar estado de processamento
+
     function resetProcessingState() {
         urlInput.disabled = false;
         pageImageInput.disabled = false;
         fieldsInput.disabled = false;
+        schemaInput.disabled = false;
         modelProviderSelect.disabled = false;
-        if (geminiKeyInput) geminiKeyInput.disabled = false;
+        thinkingLevelSelect.disabled = false;
+
+        if (geminiKeyInput) {
+            geminiKeyInput.disabled = false;
+        }
+
         useMockCheckbox.disabled = false;
         submitBtn.disabled = false;
         testLLMBtn.disabled = false;
-        
-        // Remover classe visual de somente leitura
-        scraperForm.closest('.card').classList.remove('form-readonly');
-        
-        // Resetar texto do botão
-        submitBtn.innerHTML = '<i class="bi bi-search me-2"></i>Iniciar Extração';
+
+        const card = scraperForm.closest('.card');
+
+        if (card) {
+            card.classList.remove('form-readonly');
+        }
+
+        submitBtn.innerHTML =
+            '<i class="bi bi-search me-2"></i>Iniciar Extração';
     }
-    
-    // Iniciar extração
+
     function startExtraction(event) {
         event.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
-        
-        // Preparar dados do formulário
+
         const formData = new FormData();
-        formData.append('fields', fieldsInput.value);
-        formData.append('model_provider', modelProviderSelect.value);
-        formData.append('use_mock', useMockCheckbox.checked);
-        
-        // Adicionar URL se fornecida
+
+        formData.append(
+            'fields',
+            fieldsInput.value
+        );
+
+        if (schemaInput.value.trim()) {
+            formData.append(
+                'schema_json',
+                schemaInput.value
+            );
+        }
+
+        formData.append(
+            'model_provider',
+            modelProviderSelect.value
+        );
+        formData.append('thinking_level', thinkingLevelSelect.value);
+
+        formData.append(
+            'use_mock',
+            useMockCheckbox.checked
+        );
+
         if (urlInput.value) {
-            formData.append('url', urlInput.value);
+            formData.append(
+                'url',
+                urlInput.value
+            );
         }
-        
-        // Adicionar imagem se fornecida
+
         if (pageImageInput.files.length > 0) {
-            formData.append('page_image', pageImageInput.files[0]);
+            formData.append(
+                'page_image',
+                pageImageInput.files[0]
+            );
         }
-        
-        // Adicionar a chave do Gemini (vai no corpo do formulário, nunca na URL)
-        if (isGeminiModel() && geminiKeyInput && geminiKeyInput.value) {
-            formData.append('api_key', geminiKeyInput.value);
+
+        if (
+            isGeminiModel() &&
+            geminiKeyInput &&
+            geminiKeyInput.value
+        ) {
+            formData.append(
+                'api_key',
+                geminiKeyInput.value
+            );
         }
-        
-        // Desabilitar campos do formulário
+
         disableFormFields();
-        
-        // Mostrar container de status
+
         statusContainer.style.display = 'block';
         resultContainer.style.display = 'none';
-        
-        // Atualizar status
+
+        auditDownloads.replaceChildren();
+
         statusBadge.textContent = 'Iniciando';
-        statusBadge.className = 'badge bg-info status-badge';
+        statusBadge.className =
+            'badge bg-info status-badge';
+
         progressBar.style.width = '10%';
-        statusMessage.textContent = 'Iniciando o processamento...';
-        
-        // Enviar requisição para iniciar a extração
+
+        statusMessage.textContent =
+            'Iniciando o processamento...';
+
         fetch('/api/scrape', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(async response => {
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    `Erro HTTP ${response.status}`
+                );
+            }
+
+            return data;
+        })
         .then(data => {
             if (data.error) {
                 throw new Error(data.error);
             }
-            
+
             currentTaskId = data.task_id;
-            
-            // Atualizar status
-            statusBadge.textContent = 'Em Processamento';
-            statusBadge.className = 'badge bg-warning status-badge';
-            progressBar.style.width = '25%';
-            statusMessage.textContent = 'Processando a página...';
-            
-            // Iniciar polling para verificar o status
+
+            statusBadge.textContent =
+                'Em Processamento';
+
+            statusBadge.className =
+                'badge bg-warning status-badge';
+
+            progressBar.style.width =
+                '25%';
+
+            statusMessage.textContent =
+                'Processando a página...';
+
             startPolling();
         })
         .catch(error => {
-            console.error('Erro ao iniciar extração:', error);
-            
-            // Atualizar status
-            statusBadge.textContent = 'Erro';
-            statusBadge.className = 'badge bg-danger status-badge';
-            progressBar.style.width = '100%';
-            statusMessage.textContent = `Erro ao iniciar extração: ${error.message}`;
-            
-            // Resetar estado de processamento
+            console.error(
+                'Erro ao iniciar extração:',
+                error
+            );
+
+            statusBadge.textContent =
+                'Erro';
+
+            statusBadge.className =
+                'badge bg-danger status-badge';
+
+            progressBar.style.width =
+                '100%';
+
+            statusMessage.textContent =
+                `Erro ao iniciar extração: ${error.message}`;
+
             resetProcessingState();
         });
     }
-    
-    // Iniciar polling para verificar o status da tarefa
+
     function startPolling() {
-        // Limpar intervalo anterior se existir
         if (pollingInterval) {
-            clearInterval(pollingInterval);
+            clearInterval(
+                pollingInterval
+            );
         }
-        
-        // Definir intervalo de polling (a cada 2 segundos)
-        pollingInterval = setInterval(checkTaskStatus, 2000);
+
+        pollingInterval = setInterval(
+            checkTaskStatus,
+            2000
+        );
     }
-    
-    // Verificar o status da tarefa
+
     function checkTaskStatus() {
         if (!currentTaskId) {
             return;
         }
-        
-        fetch(`/api/status/${currentTaskId}`)
-        .then(response => response.json())
+
+        fetch(
+            `/api/status/${currentTaskId}`
+        )
+        .then(async response => {
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    `Erro HTTP ${response.status}`
+                );
+            }
+
+            return data;
+        })
         .then(data => {
             if (data.error) {
-                throw new Error(data.error);
+                throw new Error(
+                    data.error
+                );
             }
-            
-            // Atualizar status com base no status da tarefa
+
+            auditDownloads.replaceChildren();
+
+            const artifactLabels = {
+                manifest: 'Manifesto',
+                source: 'Fonte original',
+                raw: 'Resposta bruta',
+                text: 'Entrada processada'
+            };
+
+            (
+                data.artifacts || []
+            ).forEach(kind => {
+                const link =
+                    document.createElement('a');
+
+                link.className =
+                    'btn btn-sm btn-outline-secondary';
+
+                link.href =
+                    `/api/download/${currentTaskId}/${kind}`;
+
+                link.textContent =
+                    artifactLabels[kind] || kind;
+
+                auditDownloads.appendChild(
+                    link
+                );
+            });
+
+            downloadTextBtn.disabled =
+                !(data.artifacts || []).includes(
+                    'text'
+                );
+
             switch (data.status) {
                 case 'pending':
-                    statusBadge.textContent = 'Pendente';
-                    statusBadge.className = 'badge bg-info status-badge';
-                    progressBar.style.width = '25%';
-                    statusMessage.textContent = 'Aguardando processamento...';
+                    statusBadge.textContent =
+                        'Pendente';
+
+                    statusBadge.className =
+                        'badge bg-info status-badge';
+
+                    progressBar.style.width =
+                        '25%';
+
+                    statusMessage.textContent =
+                        'Aguardando processamento...';
+
                     break;
-                    
+
                 case 'processing':
-                    statusBadge.textContent = 'Processando';
-                    statusBadge.className = 'badge bg-warning status-badge';
-                    progressBar.style.width = '50%';
-                    statusMessage.textContent = 'Processando a página...';
+                    statusBadge.textContent =
+                        'Processando';
+
+                    statusBadge.className =
+                        'badge bg-warning status-badge';
+
+                    progressBar.style.width =
+                        '50%';
+
+                    statusMessage.textContent =
+                        'Processando a página...';
+
                     break;
-                    
+
                 case 'completed':
-                    // Limpar intervalo de polling
-                    clearInterval(pollingInterval);
-                    pollingInterval = null;
-                    
-                    // Atualizar status
-                    statusBadge.textContent = 'Concluído';
-                    statusBadge.className = 'badge bg-success status-badge';
-                    progressBar.style.width = '100%';
-                    
-                    // Verificar se há resultados
-                    if (data.result_count && data.result_count > 0) {
-                        statusMessage.textContent = `Processamento concluído com sucesso! ${data.result_count} resultados encontrados.`;
-                    } else {
-                        statusMessage.textContent = 'Processamento concluído com sucesso!';
+                    if (pollingInterval) {
+                        clearInterval(
+                            pollingInterval
+                        );
+
+                        pollingInterval = null;
                     }
-                    
-                    // Armazenar dados extraídos
-                    extractedData = data.extracted_data;
-                    
-                    // Mostrar resultados
+
+                    statusBadge.textContent =
+                        'Concluído';
+
+                    statusBadge.className =
+                        'badge bg-success status-badge';
+
+                    progressBar.style.width =
+                        '100%';
+
+                    if (
+                        data.result_count &&
+                        data.result_count > 0
+                    ) {
+                        statusMessage.textContent =
+                            'Processamento concluído com sucesso! ' +
+                            `${data.result_count} resultados encontrados.`;
+                    } else {
+                        statusMessage.textContent =
+                            'Processamento concluído com sucesso!';
+                    }
+
+                    extractedData =
+                        data.extracted_data;
+
                     showResults();
+
                     break;
-                    
+
                 case 'error':
-                    // Limpar intervalo de polling
-                    clearInterval(pollingInterval);
-                    pollingInterval = null;
-                    
-                    // Atualizar status
-                    statusBadge.textContent = 'Erro';
-                    statusBadge.className = 'badge bg-danger status-badge';
-                    progressBar.style.width = '100%';
-                    statusMessage.textContent = `Erro durante o processamento: ${data.message}`;
-                    
-                    // Resetar estado de processamento
+                    if (pollingInterval) {
+                        clearInterval(
+                            pollingInterval
+                        );
+
+                        pollingInterval = null;
+                    }
+
+                    statusBadge.textContent =
+                        'Erro';
+
+                    statusBadge.className =
+                        'badge bg-danger status-badge';
+
+                    progressBar.style.width =
+                        '100%';
+
+                    statusMessage.textContent =
+                        'Erro durante o processamento: ' +
+                        (
+                            data.message ||
+                            'Erro desconhecido.'
+                        );
+
                     resetProcessingState();
+
+                    break;
+
+                default:
+                    console.warn(
+                        'Status desconhecido recebido do servidor:',
+                        data.status
+                    );
+
                     break;
             }
         })
         .catch(error => {
-            console.error('Erro ao verificar status:', error);
-            
-            // Atualizar status
-            statusBadge.textContent = 'Erro';
-            statusBadge.className = 'badge bg-danger status-badge';
-            progressBar.style.width = '100%';
-            statusMessage.textContent = `Erro ao verificar status: ${error.message}`;
-            
-            // Limpar intervalo de polling
-            clearInterval(pollingInterval);
-            pollingInterval = null;
-            
-            // Resetar estado de processamento
+            console.error(
+                'Erro ao verificar status:',
+                error
+            );
+
+            statusBadge.textContent =
+                'Erro';
+
+            statusBadge.className =
+                'badge bg-danger status-badge';
+
+            progressBar.style.width =
+                '100%';
+
+            statusMessage.textContent =
+                `Erro ao verificar status: ${error.message}`;
+
+            if (pollingInterval) {
+                clearInterval(
+                    pollingInterval
+                );
+
+                pollingInterval = null;
+            }
+
             resetProcessingState();
         });
     }
-    
-    // Mostrar resultados
+
     function showResults() {
-        // Resetar estado de processamento
         resetProcessingState();
-        
-        // Limpar tabela de resultados
+
         resultHeaders.innerHTML = '';
         resultBody.innerHTML = '';
-        
-        // Verificar se há dados extraídos
-        if (!extractedData || extractedData.length === 0) {
-            resultContainer.style.display = 'block';
-            resultBody.innerHTML = '<tr><td colspan="100%" class="text-center">Nenhum resultado encontrado.</td></tr>';
+
+        if (
+            !extractedData ||
+            extractedData.length === 0
+        ) {
+            resultContainer.style.display =
+                'block';
+
+            resultBody.innerHTML =
+                '<tr>' +
+                '<td colspan="100%" class="text-center">' +
+                'Nenhum resultado encontrado.' +
+                '</td>' +
+                '</tr>';
+
             return;
         }
-        
-        // Obter todas as chaves únicas de todos os resultados
-        const allKeys = new Set();
-        extractedData.forEach(item => {
-            Object.keys(item).forEach(key => allKeys.add(key));
-        });
-        const keys = Array.from(allKeys);
-        
-        // Verificar se a tabela tem a estrutura correta
-        if (!resultTable || !resultHeaders || !resultBody) {
-            console.error('Estrutura da tabela não encontrada ou incompleta');
-            return;
-        }
-        
-        // Verificar se resultHeaders é um elemento tr
-        if (resultHeaders.tagName !== 'TR') {
-            console.error('resultHeaders não é um elemento TR');
-            // Tentar encontrar ou criar o elemento tr correto
-            let headerRow = resultHeaders.querySelector('tr');
-            if (!headerRow) {
-                headerRow = document.createElement('tr');
-                resultHeaders.appendChild(headerRow);
+
+        const allKeys =
+            new Set();
+
+        extractedData.forEach(
+            item => {
+                Object.keys(item).forEach(
+                    key => allKeys.add(key)
+                );
             }
-            // Usar o headerRow em vez do resultHeaders
-            resultHeaders = headerRow;
+        );
+
+        const keys =
+            Array.from(allKeys);
+
+        if (
+            resultHeaders.tagName !== 'TR'
+        ) {
+            let headerRow =
+                resultHeaders.querySelector(
+                    'tr'
+                );
+
+            if (!headerRow) {
+                headerRow =
+                    document.createElement(
+                        'tr'
+                    );
+
+                resultHeaders.appendChild(
+                    headerRow
+                );
+            }
+
+            resultHeaders =
+                headerRow;
         }
-        
-        // Adicionar cabeçalhos diretamente ao elemento thead
+
         keys.forEach(key => {
-            const th = document.createElement('th');
-            th.textContent = key;
-            resultHeaders.appendChild(th);
+            const th =
+                document.createElement('th');
+
+            th.textContent =
+                key;
+
+            resultHeaders.appendChild(
+                th
+            );
         });
-        
-        // Adicionar linhas de dados
-        extractedData.forEach(item => {
-            const row = document.createElement('tr');
-            
-            keys.forEach(key => {
-                const td = document.createElement('td');
-                td.textContent = item[key] || 'N/A';
-                row.appendChild(td);
-            });
-            
-            resultBody.appendChild(row);
-        });
-        
-        // Mostrar container de resultados
-        resultContainer.style.display = 'block';
+
+        extractedData.forEach(
+            item => {
+                const row =
+                    document.createElement(
+                        'tr'
+                    );
+
+                keys.forEach(
+                    key => {
+                        const td =
+                            document.createElement(
+                                'td'
+                            );
+
+                        const value =
+                            item[key];
+
+                        if (value == null) {
+                            td.textContent =
+                                'Não disponível';
+                        } else if (
+                            typeof value ===
+                            'object'
+                        ) {
+                            td.textContent =
+                                JSON.stringify(
+                                    value
+                                );
+                        } else {
+                            td.textContent =
+                                String(value);
+                        }
+
+                        row.appendChild(
+                            td
+                        );
+                    }
+                );
+
+                resultBody.appendChild(
+                    row
+                );
+            }
+        );
+
+        resultContainer.style.display =
+            'block';
     }
-    
-    // Baixar CSV
+
     function downloadCSV() {
-        if (!currentTaskId) {
-            return;
+        if (
+            currentTaskId
+        ) {
+            window.location.href =
+                `/api/download/${currentTaskId}/csv`;
         }
-        
-        window.location.href = `/api/download/${currentTaskId}/csv`;
     }
-    
-    // Baixar JSON
+
     function downloadJSON() {
-        if (!currentTaskId) {
-            return;
+        if (
+            currentTaskId
+        ) {
+            window.location.href =
+                `/api/download/${currentTaskId}/json`;
         }
-        
-        window.location.href = `/api/download/${currentTaskId}/json`;
     }
-    
-    // Baixar texto processado
+
     function downloadText() {
-        if (!currentTaskId) {
-            return;
+        if (
+            currentTaskId
+        ) {
+            window.location.href =
+                `/api/download/${currentTaskId}/text`;
         }
-        
-        window.location.href = `/api/download/${currentTaskId}/text`;
     }
-    
-    // Iniciar nova extração
+
     function startNewExtraction() {
-        // Resetar formulário
         scraperForm.reset();
-        
-        // Mostrar/ocultar os campos específicos do provedor
+
+        fieldsInput.required = true;
+
+        auditDownloads.replaceChildren();
+
         updateProviderFields();
-        
-        // Esconder containers de status e resultados
-        statusContainer.style.display = 'none';
-        resultContainer.style.display = 'none';
-        
-        // Resetar variáveis globais
+
+        statusContainer.style.display =
+            'none';
+
+        resultContainer.style.display =
+            'none';
+
         currentTaskId = null;
         extractedData = null;
-        
-        // Limpar intervalo de polling se existir
+
         if (pollingInterval) {
-            clearInterval(pollingInterval);
+            clearInterval(
+                pollingInterval
+            );
+
             pollingInterval = null;
         }
-    }
-    
-    // Testar conexão com LLM
-    function testLLMConnection() {
-        // Enviado por POST para que a chave de API viaje no corpo da requisição,
-        // e não na query string (onde acabaria em log de acesso e no histórico)
-        const testData = new FormData();
-        testData.append('model_provider', modelProviderSelect.value);
 
-        if (isGeminiModel() && geminiKeyInput && geminiKeyInput.value) {
-            testData.append('api_key', geminiKeyInput.value);
+        resetProcessingState();
+    }
+
+    function testLLMConnection() {
+        if (!isGeminiModel()) {
+            alert(
+                'Modelo não suportado. ' +
+                'Selecione Gemini 3.8 Flash, Gemini 3.7 Flash ou Gemini 3.6 Flash.'
+            );
+
+            return;
         }
 
-        // Desabilitar botão de teste
-        testLLMBtn.disabled = true;
-        testLLMBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Testando...';
+        const testData =
+            new FormData();
 
-        // Enviar requisição para testar conexão
-        fetch('/api/test-llm', { method: 'POST', body: testData })
-        .then(response => response.json())
+        testData.append(
+            'model_provider',
+            modelProviderSelect.value
+        );
+        testData.append('thinking_level', thinkingLevelSelect.value);
+
+        if (
+            geminiKeyInput &&
+            geminiKeyInput.value
+        ) {
+            testData.append(
+                'api_key',
+                geminiKeyInput.value
+            );
+        }
+
+        testLLMBtn.disabled =
+            true;
+
+        testLLMBtn.innerHTML =
+            '<i class="bi bi-hourglass-split me-2"></i>Testando...';
+
+        fetch(
+            '/api/test-llm',
+            {
+                method: 'POST',
+                body: testData
+            }
+        )
+        .then(async response => {
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    `Erro HTTP ${response.status}`
+                );
+            }
+
+            return data;
+        })
         .then(data => {
-            if (data.status === 'success') {
-                alert(`Teste bem-sucedido: ${data.message}`);
+            if (
+                data.status ===
+                'success'
+            ) {
+                alert(
+                    `Teste bem-sucedido: ${data.message}`
+                );
             } else {
-                alert(`Erro no teste: ${data.message}`);
+                alert(
+                    `Erro no teste: ${data.message}`
+                );
             }
         })
         .catch(error => {
-            console.error('Erro ao testar conexão:', error);
-            alert(`Erro ao testar conexão: ${error.message}`);
+            console.error(
+                'Erro ao testar conexão:',
+                error
+            );
+
+            alert(
+                `Erro ao testar conexão: ${error.message}`
+            );
         })
         .finally(() => {
-            // Reabilitar botão de teste
-            testLLMBtn.disabled = false;
-            testLLMBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Testar Conexão com LLM';
+            testLLMBtn.disabled =
+                false;
+
+            testLLMBtn.innerHTML =
+                '<i class="bi bi-check-circle me-2"></i>' +
+                'Testar Conexão com LLM';
         });
     }
-    
-    // Verificar estrutura da tabela e corrigir se necessário
-    function checkTableStructure() {
-        // Verificar se a tabela tem a estrutura correta
-        if (!resultTable || !resultHeaders || !resultBody) {
-            console.error('Estrutura da tabela não encontrada ou incompleta');
-            return;
+
+    schemaInput.addEventListener(
+        'input',
+        () => {
+            fieldsInput.required =
+                !schemaInput.value.trim();
         }
-        
-        // Verificar se há múltiplos elementos tbody
-        const tbodies = resultTable.querySelectorAll('tbody');
-        if (tbodies.length > 1) {
-            console.warn('Múltiplos elementos tbody encontrados, corrigindo estrutura');
-            // Manter apenas o primeiro tbody
-            for (let i = 1; i < tbodies.length; i++) {
-                tbodies[i].remove();
-            }
-        }
-        
-        // Verificar se resultHeaders é um elemento tr
-        if (resultHeaders.tagName !== 'TR') {
-            console.warn('resultHeaders não é um elemento TR, corrigindo estrutura');
-            // Tentar encontrar ou criar o elemento tr correto
-            let headerRow = resultHeaders.querySelector('tr');
-            if (!headerRow) {
-                headerRow = document.createElement('tr');
-                resultHeaders.appendChild(headerRow);
-            }
-            // Atualizar a referência para o elemento tr correto
-            resultHeaders = headerRow;
-        }
-    }
-    
-    // Sugerir modelo de visão quando uma imagem é carregada
-    function suggestVisionModel() {
-        // Os modelos Gemini são multimodais: já processam a imagem enviada,
-        // então não faz sentido sugerir a troca por outro modelo
-        if (isGeminiModel()) {
-            return;
-        }
-        if (pageImageInput.files.length > 0 && !isVisionModel()) {
-            const useVision = confirm('Você carregou uma imagem. Deseja usar um modelo com capacidade de visão para melhor processamento?');
-            if (useVision) {
-                modelProviderSelect.value = 'openai-vision';
-                updateProviderFields();
-            }
-        }
-    }
-    
-    // Atualizar interface com base no modelo selecionado
-    function updateInterfaceForModel() {
-        // Se um modelo de visão for selecionado, destacar o campo de upload de imagem
-        const imageInputContainer = pageImageInput.parentElement;
-        if (isVisionModel()) {
-            imageInputContainer.classList.add('vision-model-active');
-            urlInput.parentElement.classList.add('vision-model-secondary');
-        } else {
-            imageInputContainer.classList.remove('vision-model-active');
-            urlInput.parentElement.classList.remove('vision-model-secondary');
-        }
-        
-        // Mostrar/ocultar os campos específicos do provedor
-        updateProviderFields();
-    }
-    
-    // Registrar event listeners
-    modelProviderSelect.addEventListener('change', updateInterfaceForModel);
-    pageImageInput.addEventListener('change', suggestVisionModel);
-    scraperForm.addEventListener('submit', startExtraction);
-    testLLMBtn.addEventListener('click', testLLMConnection);
-    checkStatusBtn.addEventListener('click', checkTaskStatus);
-    downloadCSVBtn.addEventListener('click', downloadCSV);
-    downloadJSONBtn.addEventListener('click', downloadJSON);
-    downloadTextBtn.addEventListener('click', downloadText);
-    newExtractionBtn.addEventListener('click', startNewExtraction);
-    
-    // Inicialização
-    updateInterfaceForModel();
-    checkTableStructure();
+    );
+
+    fieldsInput.required =
+        !schemaInput.value.trim();
+
+    modelProviderSelect.addEventListener(
+        'change',
+        updateProviderFields
+    );
+
+    scraperForm.addEventListener(
+        'submit',
+        startExtraction
+    );
+
+    testLLMBtn.addEventListener(
+        'click',
+        testLLMConnection
+    );
+
+    checkStatusBtn.addEventListener(
+        'click',
+        checkTaskStatus
+    );
+
+    downloadCSVBtn.addEventListener(
+        'click',
+        downloadCSV
+    );
+
+    downloadJSONBtn.addEventListener(
+        'click',
+        downloadJSON
+    );
+
+    downloadTextBtn.addEventListener(
+        'click',
+        downloadText
+    );
+
+    newExtractionBtn.addEventListener(
+        'click',
+        startNewExtraction
+    );
+
+    updateProviderFields();
 });

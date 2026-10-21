@@ -18,7 +18,8 @@ from .afirmacoes import carregar_registros
 from .config import Config
 from .relatorio import escrever_csv, escrever_html, escrever_json, resumo_texto
 from .reparo import aplicar_reparos
-from .verificador import Relatorio, verificar
+from .verificador import Relatorio, verificar, reparar_e_reverificar
+from .contrato import loads_json
 
 FORMATOS = ("json", "csv", "html")
 
@@ -34,7 +35,7 @@ def _preparar_console() -> None:
 def _carregar_gabarito(caminho: Optional[str]) -> Any:
     if not caminho:
         return None
-    return json.loads(Path(caminho).read_text(encoding="utf-8-sig"))
+    return loads_json(Path(caminho).read_text(encoding="utf-8-sig"))
 
 
 def _gerar_saidas(relatorio: Relatorio, destino: Path, base_nome: str,
@@ -68,6 +69,7 @@ def comando_verificar(args: argparse.Namespace) -> int:
         gabarito=_carregar_gabarito(args.gabarito),
         com_reparo=not args.sem_reparo,
         forcar_tipo_fonte={"html": "html", "texto": "text"}.get(args.tipo_fonte),
+        schema=_carregar_gabarito(args.schema),
     )
 
     print(resumo_texto(relatorio))
@@ -79,16 +81,18 @@ def comando_verificar(args: argparse.Namespace) -> int:
         print(f"[saída] {caminho}")
 
     if args.aplicar_reparos:
-        sugestoes = {chave: lista
-                     for bloco in relatorio.registros
-                     for chave, lista in bloco.sugestoes.items()}
-        corrigidos = aplicar_reparos(carregar_registros(args.extracao), sugestoes)
+        corrigidos, pos, mudancas = reparar_e_reverificar(relatorio, Path(args.fonte).read_text(encoding="utf-8-sig"))
+        destino.mkdir(parents=True, exist_ok=True)
         caminho = destino / f"{base_nome}_corrigido.json"
         caminho.write_text(json.dumps(corrigidos, ensure_ascii=False, indent=2),
                            encoding="utf-8")
-        ancorados = sum(1 for candidatos in sugestoes.values() if candidatos)
-        print(f"[saída] {caminho}  ({ancorados} campo(s) corrigido(s) com valor "
-              f"ancorado, {len(sugestoes) - ancorados} marcado(s) como indisponível)")
+        escrever_json(pos, destino / f"{base_nome}_pos_reparo.json")
+        auditoria = {"tentativas": mudancas, "metricas_antes": relatorio.metricas,
+                     "metricas_depois": pos.metricas,
+                     "nota": "Taxas do verificador não demonstram acurácia; avaliar com gabarito independente."}
+        (destino / f"{base_nome}_reparos.json").write_text(json.dumps(auditoria, ensure_ascii=False, indent=2), encoding="utf-8")
+        aceitos = sum(m["aceito"] for m in mudancas)
+        print(f"[saída] {caminho}  ({aceitos} alteração(ões) aceita(s) após reverificação; veja *_reparos.json e *_pos_reparo.json)")
 
     if args.falhar_se_alucinacao and relatorio.alucinacoes:
         return 1
@@ -218,6 +222,7 @@ def construir_parser() -> argparse.ArgumentParser:
     p_ver.add_argument("--fonte", required=True,
                        help="HTML bruto da página ou {task_id}_text.txt")
     p_ver.add_argument("--gabarito", help="JSON de anotação manual para avaliar o verificador")
+    p_ver.add_argument("--schema", help="Contrato JSON Schema; validado automaticamente se houver manifesto")
     p_ver.add_argument("--tipo-fonte", choices=("html", "texto"),
                        help="força o tipo da fonte (padrão: detecção automática)")
     p_ver.add_argument("--aplicar-reparos", action="store_true",
@@ -248,7 +253,14 @@ def construir_parser() -> argparse.ArgumentParser:
 def main(argv: Optional[List[str]] = None) -> int:
     _preparar_console()
     args = construir_parser().parse_args(argv)
-    return args.func(args)
+    if getattr(args, "sem_reparo", False) and getattr(args, "aplicar_reparos", False):
+        print("--sem-reparo e --aplicar-reparos são incompatíveis.", file=sys.stderr)
+        return 2
+    try:
+        return args.func(args)
+    except (ValueError, OSError) as exc:
+        print(f"Erro: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

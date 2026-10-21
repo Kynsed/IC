@@ -1,0 +1,6784 @@
+{
+  "benchmark": "IC synthetic factual verification benchmark",
+  "version": 1,
+  "sha256": "ce49f2116b73bac1563cbeb88560bd8e680bdee0b48829f868773faa3de9ccc2",
+  "synthetic": true,
+  "provenance": "Fixtures autorais sintéticas construídas a partir dos oito cenários solicitados na revisão. Não são dados CIL, dados pessoais reais nem respostas de modelos. Gold e decisões esperadas são declarações manuais independentes das funções do verificador.",
+  "limitations": [
+    "Corpus pequeno e sintético, sem estimativa de desempenho em dados CIL ou respostas reais de LLM.",
+    "Mesmos exemplos motivaram o desenvolvimento: conjunto de regressão público, não conjunto de teste independente para alegar generalização.",
+    "Exact-match de folhas JSON com identidades explícitas; variantes corretas exigem gold normalizado explicitamente.",
+    "Decisões PARCIAL, INVALIDA, NAO_VERIFICAVEL, ABSTENCAO e ERRO_EXTRACAO permanecem fora das três classes factuais conclusivas; a cobertura acompanha as métricas condicionais.",
+    "Após reparo deve ser avaliado contra o mesmo gold independente; melhorar precisão por abstenção pode reduzir recall."
+  ],
+  "total_cases": 23,
+  "completed_cases": 21,
+  "execution_errors": 0,
+  "expected_contract_rejections": 2,
+  "all_candidates_extraction_before": {
+    "tp": 41,
+    "fp": 15,
+    "fn": 14,
+    "precision": 0.732143,
+    "recall": 0.745455,
+    "f1": 0.738739
+  },
+  "paired_cases": 21,
+  "micro_extraction_scope": "Only cases with completed, reverified repair; same paired cases before and after.",
+  "micro_extraction": {
+    "before": {
+      "tp": 39,
+      "fp": 14,
+      "fn": 12,
+      "precision": 0.735849,
+      "recall": 0.764706,
+      "f1": 0.75
+    },
+    "after": {
+      "tp": 46,
+      "fp": 4,
+      "fn": 5,
+      "precision": 0.92,
+      "recall": 0.901961,
+      "f1": 0.910891
+    }
+  },
+  "repair_totals": {
+    "correct_facts_recovered": 7,
+    "correct_facts_lost": 0,
+    "incorrect_facts_introduced": 0,
+    "incorrect_facts_removed": 10
+  },
+  "detector": {
+    "confusion_matrix": {
+      "SUPORTADA": {
+        "SUPORTADA": 39,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 0,
+        "PARCIAL": 0,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "ATRIBUICAO_INCORRETA": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 6,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 0,
+        "PARCIAL": 1,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "NAO_SUPORTADA": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 6,
+        "ABSTENCAO": 0,
+        "PARCIAL": 1,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "ABSTENCAO": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 1,
+        "PARCIAL": 0,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "PARCIAL": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 0,
+        "PARCIAL": 0,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "NAO_VERIFICAVEL": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 0,
+        "PARCIAL": 0,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "INVALIDA": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 0,
+        "PARCIAL": 0,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      },
+      "ERRO_EXTRACAO": {
+        "SUPORTADA": 0,
+        "ATRIBUICAO_INCORRETA": 0,
+        "NAO_SUPORTADA": 0,
+        "ABSTENCAO": 0,
+        "PARCIAL": 0,
+        "NAO_VERIFICAVEL": 0,
+        "INVALIDA": 0,
+        "ERRO_EXTRACAO": 0,
+        "MISSING": 0
+      }
+    },
+    "annotated": 54,
+    "matched": 54,
+    "prediction_annotation_coverage": 1.0,
+    "exact_decision_accuracy": 0.962963,
+    "decision_counts": {
+      "SUPORTADA": 39,
+      "NAO_SUPORTADA": 6,
+      "ATRIBUICAO_INCORRETA": 6,
+      "ABSTENCAO": 1,
+      "PARCIAL": 2
+    },
+    "mismatches": [
+      {
+        "record": 0,
+        "field": "11_inline_intrinsic:idade",
+        "expected": "ATRIBUICAO_INCORRETA",
+        "observed": "PARCIAL"
+      },
+      {
+        "record": 0,
+        "field": "13_negation:descricao",
+        "expected": "NAO_SUPORTADA",
+        "observed": "PARCIAL"
+      }
+    ],
+    "unannotated_predictions": [],
+    "binary_conclusive_only": {
+      "tp": 12,
+      "fp": 0,
+      "tn": 39,
+      "fn": 0,
+      "inconclusive": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "coverage": 0.962264
+    },
+    "hallucination_detection_recall_all_annotated": 0.857143,
+    "hallucination_detection_precision_on_annotated_facts": 1.0,
+    "error_predictions_with_factual_annotation": 12,
+    "error_predictions_total": 12,
+    "error_prediction_factual_annotation_coverage": 1.0,
+    "false_supports": 0,
+    "supported_predictions_on_annotated_facts": 39,
+    "false_support_rate": 0.0,
+    "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+  },
+  "detector_confusion_matrix": {
+    "SUPORTADA": {
+      "SUPORTADA": 39,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 0,
+      "PARCIAL": 0,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "ATRIBUICAO_INCORRETA": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 6,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 0,
+      "PARCIAL": 1,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "NAO_SUPORTADA": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 6,
+      "ABSTENCAO": 0,
+      "PARCIAL": 1,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "ABSTENCAO": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 1,
+      "PARCIAL": 0,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "PARCIAL": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 0,
+      "PARCIAL": 0,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "NAO_VERIFICAVEL": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 0,
+      "PARCIAL": 0,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "INVALIDA": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 0,
+      "PARCIAL": 0,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    },
+    "ERRO_EXTRACAO": {
+      "SUPORTADA": 0,
+      "ATRIBUICAO_INCORRETA": 0,
+      "NAO_SUPORTADA": 0,
+      "ABSTENCAO": 0,
+      "PARCIAL": 0,
+      "NAO_VERIFICAVEL": 0,
+      "INVALIDA": 0,
+      "ERRO_EXTRACAO": 0,
+      "MISSING": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "01_correct",
+      "tags": [
+        "required_1",
+        "article"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 2,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 2,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "02_extrinsic",
+      "tags": [
+        "required_2"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.666667,
+        "predicted_facts": 2,
+        "expected_facts": 1,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 1,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "NAO_SUPORTADA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 1,
+        "error_predictions_total": 1,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.666667,
+          "predicted_facts": 2,
+          "expected_facts": 1,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 1,
+          "expected_facts": 1,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": null
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:idade",
+          "antes": 30,
+          "candidato": null,
+          "evidencia": null,
+          "depois": null,
+          "veredito_pos": "ABSTENCAO",
+          "aceito": true,
+          "motivo": "abstenção permitida"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ABSTENCAO"
+        }
+      ]
+    },
+    {
+      "id": "03_intrinsic",
+      "tags": [
+        "required_3",
+        "article"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 45,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 1,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "ATRIBUICAO_INCORRETA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 1,
+        "error_predictions_total": 1,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 1,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:idade",
+          "antes": 45,
+          "candidato": "30",
+          "evidencia": {
+            "valor": "30",
+            "score": 0.85,
+            "caminho": "html > body > article#maria > p",
+            "justificativa": "valor após o rótulo 'idade' na entidade"
+          },
+          "depois": 30,
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "04_duplicate_context",
+      "tags": [
+        "required_4"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45,
+          "cidade": "Recife"
+        }
+      ],
+      "extraction_before": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.666667,
+        "recall": 0.666667,
+        "f1": 0.666667,
+        "predicted_facts": 3,
+        "expected_facts": 3,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 45,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 2,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 1,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 3,
+        "matched": 3,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 2,
+          "ATRIBUICAO_INCORRETA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 1,
+        "error_predictions_total": 1,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 2,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.666667,
+          "recall": 0.666667,
+          "f1": 0.666667,
+          "predicted_facts": 3,
+          "expected_facts": 3,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 3,
+          "expected_facts": 3,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 1,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30,
+          "cidade": "Recife"
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:idade",
+          "antes": 45,
+          "candidato": "30",
+          "evidencia": {
+            "valor": "30",
+            "score": 0.85,
+            "caminho": "html > body > article > p",
+            "justificativa": "valor após o rótulo 'idade' na entidade"
+          },
+          "depois": 30,
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        },
+        {
+          "record": 0,
+          "field": "cidade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "cidade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "05_normalization",
+      "tags": [
+        "required_5"
+      ],
+      "before": [
+        {
+          "nome": "JOAO DA SILVA",
+          "data": "2019-03-15",
+          "preco": "1234.56"
+        }
+      ],
+      "extraction_before": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 3,
+        "expected_facts": 3,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 3,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 3,
+        "matched": 3,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 3
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 3,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 3,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 3,
+          "expected_facts": 3,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 3,
+          "expected_facts": 3,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "JOAO DA SILVA",
+          "data": "2019-03-15",
+          "preco": "1234.56"
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "data",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "preco",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "data",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "preco",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "06_absent_null",
+      "tags": [
+        "required_6"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": null
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 1,
+        "expected_facts": 1,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 1,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "ABSTENCAO": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 1,
+          "expected_facts": 1,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 1,
+          "expected_facts": 1,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": null
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ABSTENCAO"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ABSTENCAO"
+        }
+      ]
+    },
+    {
+      "id": "07_nested_intrinsic",
+      "tags": [
+        "required_7",
+        "nested"
+      ],
+      "before": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "Maria",
+              "idade": 45
+            },
+            {
+              "nome": "João",
+              "idade": 30
+            }
+          ]
+        }
+      ],
+      "extraction_before": {
+        "tp": 3,
+        "fp": 2,
+        "fn": 2,
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "predicted_facts": 5,
+        "expected_facts": 5,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "grupo"
+          ],
+          "/pessoas": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"grupo\":\"família\"}",
+            "path": "/pessoas/@{\"nome\":\"João\"}/idade",
+            "value": 30,
+            "count": 1
+          },
+          {
+            "entity": "{\"grupo\":\"família\"}",
+            "path": "/pessoas/@{\"nome\":\"Maria\"}/idade",
+            "value": 45,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"grupo\":\"família\"}",
+            "path": "/pessoas/@{\"nome\":\"João\"}/idade",
+            "value": 45,
+            "count": 1
+          },
+          {
+            "entity": "{\"grupo\":\"família\"}",
+            "path": "/pessoas/@{\"nome\":\"Maria\"}/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 3,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 2,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 5,
+        "matched": 5,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 3,
+          "ATRIBUICAO_INCORRETA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 3,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 2,
+        "error_predictions_total": 2,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 3,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 3,
+          "fp": 2,
+          "fn": 2,
+          "precision": 0.6,
+          "recall": 0.6,
+          "f1": 0.6,
+          "predicted_facts": 5,
+          "expected_facts": 5,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "grupo"
+            ],
+            "/pessoas": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"João\"}/idade",
+              "value": 30,
+              "count": 1
+            },
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"Maria\"}/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"João\"}/idade",
+              "value": 45,
+              "count": 1
+            },
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"Maria\"}/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 5,
+          "expected_facts": 5,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "grupo"
+            ],
+            "/pessoas": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 2,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 2,
+          "recovered": [
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"João\"}/idade",
+              "value": 45,
+              "count": 1
+            },
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"Maria\"}/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"João\"}/idade",
+              "value": 30,
+              "count": 1
+            },
+            {
+              "entity": "{\"grupo\":\"família\"}",
+              "path": "/pessoas/@{\"nome\":\"Maria\"}/idade",
+              "value": 45,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "Maria",
+              "idade": 30
+            },
+            {
+              "nome": "João",
+              "idade": 45
+            }
+          ]
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:/pessoas/0/idade",
+          "antes": 45,
+          "candidato": "30",
+          "evidencia": {
+            "valor": "30",
+            "score": 0.85,
+            "caminho": "html > body > main > article > p:nth-of-type(2)",
+            "justificativa": "valor após o rótulo 'idade' na entidade"
+          },
+          "depois": 30,
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        },
+        {
+          "afirmacao": "r0:/pessoas/1/idade",
+          "antes": 30,
+          "candidato": "45",
+          "evidencia": {
+            "valor": "45",
+            "score": 0.85,
+            "caminho": "html > body > main > article:nth-of-type(2) > p:nth-of-type(2)",
+            "justificativa": "valor após o rótulo 'idade' na entidade"
+          },
+          "depois": 45,
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "grupo",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "grupo",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "08_layout_table_correct",
+      "tags": [
+        "required_8",
+        "table"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 2,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 2,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "09_layout_table_intrinsic",
+      "tags": [
+        "required_8",
+        "table"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 45,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 1,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "ATRIBUICAO_INCORRETA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 1,
+        "error_predictions_total": 1,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 1,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:idade",
+          "antes": 45,
+          "candidato": "30",
+          "evidencia": {
+            "valor": "30",
+            "score": 0.85,
+            "caminho": "html > body > table > tr:nth-of-type(2) > td:nth-of-type(2)",
+            "justificativa": "rótulo estrutural do atributo na entidade"
+          },
+          "depois": 30,
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "10_text_intrinsic",
+      "tags": [
+        "required_3",
+        "text"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 45,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 1,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "ATRIBUICAO_INCORRETA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 1,
+        "error_predictions_total": 1,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 1,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:idade",
+          "antes": 45,
+          "candidato": "30",
+          "evidencia": {
+            "valor": "30",
+            "score": 0.85,
+            "caminho": "linha[2]",
+            "justificativa": "valor após o rótulo 'idade' na entidade"
+          },
+          "depois": 30,
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ATRIBUICAO_INCORRETA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "11_inline_intrinsic",
+      "tags": [
+        "required_8",
+        "inline"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 45,
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 1,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 0.5,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "PARCIAL": 1
+        },
+        "mismatches": [
+          {
+            "record": 0,
+            "field": "idade",
+            "expected": "ATRIBUICAO_INCORRETA",
+            "observed": "PARCIAL"
+          }
+        ],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 1,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 0.5
+        },
+        "hallucination_detection_recall_all_annotated": 0.0,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 45
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "PARCIAL"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "PARCIAL"
+        }
+      ]
+    },
+    {
+      "id": "12_more_than_five_occurrences",
+      "tags": [
+        "duplicate_over_five",
+        "required_4"
+      ],
+      "before": [
+        {
+          "nome": "Pessoa6",
+          "cidade": "Recife",
+          "idade": 36
+        }
+      ],
+      "extraction_before": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 3,
+        "expected_facts": 3,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 3,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 3,
+        "matched": 3,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 3
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 3,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 3,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 3,
+          "expected_facts": 3,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 3,
+          "expected_facts": 3,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Pessoa6",
+          "cidade": "Recife",
+          "idade": 36
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "cidade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "cidade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "13_negation",
+      "tags": [
+        "negation"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "descricao": "Maria recebeu R$ 100."
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/descricao",
+            "value": "Maria recebeu R$ 100.",
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/descricao",
+            "value": "Maria não recebeu R$ 100.",
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 1,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 0.5,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "PARCIAL": 1
+        },
+        "mismatches": [
+          {
+            "record": 0,
+            "field": "descricao",
+            "expected": "NAO_SUPORTADA",
+            "observed": "PARCIAL"
+          }
+        ],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 1,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 0.5
+        },
+        "hallucination_detection_recall_all_annotated": 0.0,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/descricao",
+              "value": "Maria recebeu R$ 100.",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/descricao",
+              "value": "Maria não recebeu R$ 100.",
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/descricao",
+              "value": "Maria recebeu R$ 100.",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/descricao",
+              "value": "Maria não recebeu R$ 100.",
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "descricao": "Maria recebeu R$ 100."
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "descricao",
+          "decision": "PARCIAL"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "descricao",
+          "decision": "PARCIAL"
+        }
+      ]
+    },
+    {
+      "id": "14_currency_identity",
+      "tags": [
+        "currency"
+      ],
+      "before": [
+        {
+          "nome": "Produto A",
+          "preco": "US$ 100,00"
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Produto A\"}",
+            "path": "/preco",
+            "value": "US$ 100,00",
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Produto A\"}",
+            "path": "/preco",
+            "value": "R$ 100,00",
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 1,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1,
+          "NAO_SUPORTADA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 1,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 1,
+        "error_predictions_total": 1,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Produto A\"}",
+              "path": "/preco",
+              "value": "US$ 100,00",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Produto A\"}",
+              "path": "/preco",
+              "value": "R$ 100,00",
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 1,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [
+            {
+              "entity": "{\"nome\":\"Produto A\"}",
+              "path": "/preco",
+              "value": "R$ 100,00",
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Produto A\"}",
+              "path": "/preco",
+              "value": "US$ 100,00",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Produto A",
+          "preco": "R$ 100,00"
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:preco",
+          "antes": "US$ 100,00",
+          "candidato": "R$ 100,00",
+          "evidencia": {
+            "valor": "R$ 100,00",
+            "score": 0.976,
+            "caminho": "html > body > article > p",
+            "justificativa": "valor após o rótulo 'preco' na entidade"
+          },
+          "depois": "R$ 100,00",
+          "veredito_pos": "SUPORTADA",
+          "aceito": true,
+          "motivo": "suporte confirmado"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "preco",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "preco",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "15_missing_field",
+      "tags": [
+        "omission"
+      ],
+      "before": [
+        {
+          "nome": "Maria"
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.666667,
+        "predicted_facts": 1,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 1,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 1,
+        "matched": 1,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 1
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 1,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 1,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.666667,
+          "predicted_facts": 1,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.666667,
+          "predicted_facts": 1,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria"
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "16_missing_record",
+      "tags": [
+        "omission"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.666667,
+        "predicted_facts": 2,
+        "expected_facts": 4,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"João\"}",
+            "path": "/idade",
+            "value": 45,
+            "count": 1
+          },
+          {
+            "entity": "{\"nome\":\"João\"}",
+            "path": "/nome",
+            "value": "João",
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 2,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 2,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.666667,
+          "predicted_facts": 2,
+          "expected_facts": 4,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            },
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/nome",
+              "value": "João",
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.666667,
+          "predicted_facts": 2,
+          "expected_facts": 4,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            },
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/nome",
+              "value": "João",
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "independent_intervention_example": {
+        "before": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.666667,
+          "predicted_facts": 2,
+          "expected_facts": 4,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            },
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/nome",
+              "value": "João",
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 4,
+          "expected_facts": 4,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 2,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            },
+            {
+              "entity": "{\"nome\":\"João\"}",
+              "path": "/nome",
+              "value": "João",
+              "count": 1
+            }
+          ],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      }
+    },
+    {
+      "id": "17_reordered_records",
+      "tags": [
+        "reorder"
+      ],
+      "before": [
+        {
+          "nome": "João",
+          "idade": 45
+        },
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 4,
+        "expected_facts": 4,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 4,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 4,
+        "matched": 4,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 4
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 4,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 4,
+          "expected_facts": 4,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 4,
+          "expected_facts": 4,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "João",
+          "idade": 45
+        },
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "18_harmful_intervention",
+      "tags": [
+        "bad_repair"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 2,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 2,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "independent_intervention_example": {
+        "before": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "predicted_facts": 2,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 1,
+          "incorrect_facts_introduced": 1,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ],
+          "introduced": [
+            {
+              "entity": "{\"nome\":\"Maria\"}",
+              "path": "/idade",
+              "value": 45,
+              "count": 1
+            }
+          ],
+          "removed": []
+        }
+      }
+    },
+    {
+      "id": "19_extra_record",
+      "tags": [
+        "extra_record"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        },
+        {
+          "nome": "Pedro",
+          "idade": 50
+        }
+      ],
+      "extraction_before": {
+        "tp": 2,
+        "fp": 2,
+        "fn": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.666667,
+        "predicted_facts": 4,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Pedro\"}",
+            "path": "/idade",
+            "value": 50,
+            "count": 1
+          },
+          {
+            "entity": "{\"nome\":\"Pedro\"}",
+            "path": "/nome",
+            "value": "Pedro",
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 2,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 2,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 4,
+        "matched": 4,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 2,
+          "NAO_SUPORTADA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 2,
+        "error_predictions_total": 2,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 2,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.666667,
+          "predicted_facts": 4,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Pedro\"}",
+              "path": "/idade",
+              "value": 50,
+              "count": 1
+            },
+            {
+              "entity": "{\"nome\":\"Pedro\"}",
+              "path": "/nome",
+              "value": "Pedro",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.666667,
+          "recall": 1.0,
+          "f1": 0.8,
+          "predicted_facts": 3,
+          "expected_facts": 2,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Pedro\"}",
+              "path": "/nome",
+              "value": "Pedro",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Pedro\"}",
+              "path": "/idade",
+              "value": 50,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Maria",
+          "idade": 30
+        },
+        {
+          "nome": "Pedro",
+          "idade": null
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r1:nome",
+          "antes": "Pedro",
+          "candidato": null,
+          "evidencia": null,
+          "aceito": false,
+          "motivo": "Contrato não permite abstenção nula; valor original preservado."
+        },
+        {
+          "afirmacao": "r1:idade",
+          "antes": 50,
+          "candidato": null,
+          "evidencia": null,
+          "depois": null,
+          "veredito_pos": "ABSTENCAO",
+          "aceito": true,
+          "motivo": "abstenção permitida"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "nome",
+          "decision": "NAO_SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "idade",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "nome",
+          "decision": "NAO_SUPORTADA"
+        },
+        {
+          "record": 1,
+          "field": "idade",
+          "decision": "ABSTENCAO"
+        }
+      ]
+    },
+    {
+      "id": "20_nested_reordered",
+      "tags": [
+        "nested",
+        "reorder"
+      ],
+      "before": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "João",
+              "idade": 45
+            },
+            {
+              "nome": "Maria",
+              "idade": 30
+            }
+          ]
+        }
+      ],
+      "extraction_before": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "predicted_facts": 5,
+        "expected_facts": 5,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "grupo"
+          ],
+          "/pessoas": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 5,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 5,
+        "matched": 5,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "SUPORTADA": 5
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 5,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": null,
+        "hallucination_detection_precision_on_annotated_facts": null,
+        "error_predictions_with_factual_annotation": 0,
+        "error_predictions_total": 0,
+        "error_prediction_factual_annotation_coverage": null,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 5,
+        "false_support_rate": 0.0,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 5,
+          "expected_facts": 5,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "grupo"
+            ],
+            "/pessoas": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "predicted_facts": 5,
+          "expected_facts": 5,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "grupo"
+            ],
+            "/pessoas": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 0,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": []
+        }
+      },
+      "after": [
+        {
+          "grupo": "família",
+          "pessoas": [
+            {
+              "nome": "João",
+              "idade": 45
+            },
+            {
+              "nome": "Maria",
+              "idade": 30
+            }
+          ]
+        }
+      ],
+      "repair_changes": [],
+      "observed": [
+        {
+          "record": 0,
+          "field": "grupo",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/idade",
+          "decision": "SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "grupo",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/0/idade",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/nome",
+          "decision": "SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "/pessoas/1/idade",
+          "decision": "SUPORTADA"
+        }
+      ]
+    },
+    {
+      "id": "21_required_field_missing",
+      "tags": [
+        "contract_missing_required"
+      ],
+      "before": [
+        {
+          "nome": "Maria"
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.666667,
+        "predicted_facts": 1,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": false,
+      "status": "contract_rejected",
+      "contract_valid": false,
+      "error_type": "ContractError",
+      "error": "registros/0: campos ausentes=['idade'], extras=[]."
+    },
+    {
+      "id": "22_wrong_scalar_type",
+      "tags": [
+        "contract_type"
+      ],
+      "before": [
+        {
+          "nome": "Maria",
+          "idade": "30"
+        }
+      ],
+      "extraction_before": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "predicted_facts": 2,
+        "expected_facts": 2,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": "30",
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [
+          {
+            "entity": "{\"nome\":\"Maria\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          }
+        ],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": false,
+      "status": "contract_rejected",
+      "contract_valid": false,
+      "error_type": "ContractError",
+      "error": "registros/0/idade: esperado ['integer', 'null']; recebido str."
+    },
+    {
+      "id": "23_token_boundaries",
+      "tags": [
+        "token_boundary",
+        "numeric_boundary"
+      ],
+      "before": [
+        {
+          "nome": "Ana",
+          "idade": 30
+        }
+      ],
+      "extraction_before": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0,
+        "predicted_facts": 2,
+        "expected_facts": 0,
+        "duplicate_entities": 0,
+        "entity_keys": {
+          "/": [
+            "nome"
+          ]
+        },
+        "false_positive_facts": [
+          {
+            "entity": "{\"nome\":\"Ana\"}",
+            "path": "/idade",
+            "value": 30,
+            "count": 1
+          },
+          {
+            "entity": "{\"nome\":\"Ana\"}",
+            "path": "/nome",
+            "value": "Ana",
+            "count": 1
+          }
+        ],
+        "false_negative_facts": [],
+        "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+      },
+      "expected_contract_valid": true,
+      "status": "completed",
+      "contract_valid": true,
+      "detector": {
+        "confusion_matrix": {
+          "SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ATRIBUICAO_INCORRETA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_SUPORTADA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 2,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ABSTENCAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "PARCIAL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "NAO_VERIFICAVEL": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "INVALIDA": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          },
+          "ERRO_EXTRACAO": {
+            "SUPORTADA": 0,
+            "ATRIBUICAO_INCORRETA": 0,
+            "NAO_SUPORTADA": 0,
+            "ABSTENCAO": 0,
+            "PARCIAL": 0,
+            "NAO_VERIFICAVEL": 0,
+            "INVALIDA": 0,
+            "ERRO_EXTRACAO": 0,
+            "MISSING": 0
+          }
+        },
+        "annotated": 2,
+        "matched": 2,
+        "prediction_annotation_coverage": 1.0,
+        "exact_decision_accuracy": 1.0,
+        "decision_counts": {
+          "NAO_SUPORTADA": 2
+        },
+        "mismatches": [],
+        "unannotated_predictions": [],
+        "binary_conclusive_only": {
+          "tp": 2,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0,
+          "inconclusive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "coverage": 1.0
+        },
+        "hallucination_detection_recall_all_annotated": 1.0,
+        "hallucination_detection_precision_on_annotated_facts": 1.0,
+        "error_predictions_with_factual_annotation": 2,
+        "error_predictions_total": 2,
+        "error_prediction_factual_annotation_coverage": 1.0,
+        "false_supports": 0,
+        "supported_predictions_on_annotated_facts": 0,
+        "false_support_rate": null,
+        "note": "Inconclusive decisions are not correct detections; conditional metrics require coverage. Unannotated predictions are not false positives; precision uses factual annotations only."
+      },
+      "extraction_and_repair": {
+        "before": {
+          "tp": 0,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0,
+          "predicted_facts": 2,
+          "expected_facts": 0,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Ana\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            },
+            {
+              "entity": "{\"nome\":\"Ana\"}",
+              "path": "/nome",
+              "value": "Ana",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "after": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0,
+          "predicted_facts": 1,
+          "expected_facts": 0,
+          "duplicate_entities": 0,
+          "entity_keys": {
+            "/": [
+              "nome"
+            ]
+          },
+          "false_positive_facts": [
+            {
+              "entity": "{\"nome\":\"Ana\"}",
+              "path": "/nome",
+              "value": "Ana",
+              "count": 1
+            }
+          ],
+          "false_negative_facts": [],
+          "comparison": "typed JSON exact match; explicit gold normalization; null/abstention excluded"
+        },
+        "repair": {
+          "correct_facts_recovered": 0,
+          "correct_facts_lost": 0,
+          "incorrect_facts_introduced": 0,
+          "incorrect_facts_removed": 1,
+          "recovered": [],
+          "lost": [],
+          "introduced": [],
+          "removed": [
+            {
+              "entity": "{\"nome\":\"Ana\"}",
+              "path": "/idade",
+              "value": 30,
+              "count": 1
+            }
+          ]
+        }
+      },
+      "after": [
+        {
+          "nome": "Ana",
+          "idade": null
+        }
+      ],
+      "repair_changes": [
+        {
+          "afirmacao": "r0:nome",
+          "antes": "Ana",
+          "candidato": null,
+          "evidencia": null,
+          "aceito": false,
+          "motivo": "Contrato não permite abstenção nula; valor original preservado."
+        },
+        {
+          "afirmacao": "r0:idade",
+          "antes": 30,
+          "candidato": null,
+          "evidencia": null,
+          "depois": null,
+          "veredito_pos": "ABSTENCAO",
+          "aceito": true,
+          "motivo": "abstenção permitida"
+        }
+      ],
+      "observed": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "NAO_SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "NAO_SUPORTADA"
+        }
+      ],
+      "config": {
+        "cobertura_suporte": 0.92,
+        "cobertura_parcial": 0.6,
+        "janela_suporte": 0.85,
+        "fuzzy_suporte": 0.94,
+        "fuzzy_parcial": 0.82,
+        "janela_rotulo": 140,
+        "score_numero_sem_rotulo": 0.6,
+        "resumo_max_palavras": 30,
+        "resumo_cobertura_minima": 0.55,
+        "ano_minimo": 1400,
+        "ano_maximo_folga": 1,
+        "coesao_minima": 0.7,
+        "minimo_campos_coesao": 3,
+        "janela_linhas_texto": 40,
+        "sugestoes_por_campo": 3,
+        "data_referencia": "2026-10-05"
+      },
+      "after_decisions": [
+        {
+          "record": 0,
+          "field": "nome",
+          "decision": "NAO_SUPORTADA"
+        },
+        {
+          "record": 0,
+          "field": "idade",
+          "decision": "ABSTENCAO"
+        }
+      ]
+    }
+  ]
+}

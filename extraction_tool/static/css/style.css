@@ -132,11 +132,6 @@ input[type="file"].form-control {
     color: #bd2130;
 }
 
-/* Estilo para destacar o modelo de visão selecionado */
-#model-provider option[value="openai-vision"] {
-    font-weight: bold;
-    color: #0d6efd;
-}
 
 /* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {

@@ -30,7 +30,6 @@ from .normalizacao import (
 
 __all__ = ["Evidence", "EvidenceBase"]
 
-MAX_MATCHES = 25
 MAX_FUZZY_CANDIDATES = 40
 
 
@@ -49,6 +48,8 @@ class Evidence:
     flow_end: int = -1
     spans_chunks: int = 1
     detail: str = ""
+    unit: Optional[str] = None
+    negacao_externa: bool = False
 
     @property
     def snippet(self) -> str:
@@ -63,6 +64,8 @@ class Evidence:
             "trecho": self.snippet,
             "chunk": self.chunk_id,
             "detalhe": self.detail,
+            "unidade": self.unit,
+            "negacao_externa": self.negacao_externa,
         }
 
 
@@ -131,6 +134,9 @@ class EvidenceBase:
         match_text = text[local:local + length]
         if len(match_text) < length:                     # casamento cruzou chunks
             match_text = (match_text + " " + self.flow[start + len(match_text):end]).strip()
+        prefix = re.split(r"[.!?;:]", fold(text[:local]))[-1]
+        negated = bool(re.search(
+            r"\b(?:nao|nunca|jamais|not|never|sem|without)\b(?:\s+\w+){0,3}\s*$", prefix))
         return Evidence(
             rule=rule, score=score, chunk_id=chunk.cid, path=chunk.path, kind=chunk.kind,
             snippet_before=("…" if local > context else "") + text[max(0, local - context):local],
@@ -139,6 +145,7 @@ class EvidenceBase:
                           ("…" if len(text) > local + length + context else ""),
             flow_start=start, flow_end=end, spans_chunks=self._spans(start, end),
             detail=detail,
+            negacao_externa=negated,
         )
 
     # ------------------------------------------------------------------
@@ -151,11 +158,31 @@ class EvidenceBase:
         if not needle:
             return []
         out: List[Evidence] = []
-        start = self.flow.find(needle)
-        while start != -1 and len(out) < MAX_MATCHES:
-            out.append(self.make_evidence(rule, 1.0, start, start + len(needle)))
-            start = self.flow.find(needle, start + 1)
+        pattern = (r"(?<!\w)" if needle[0].isalnum() else "") + re.escape(needle)
+        pattern += r"(?!\w)" if needle[-1].isalnum() else ""
+        for match in re.finditer(pattern, self.flow):
+            if self._same_region(match.start(), match.end()):
+                out.append(self.make_evidence(rule, 1.0, match.start(), match.end()))
         return out
+
+    def _same_region(self, start: int, end: int) -> bool:
+        """Não transformar concatenação de itens/atributos em citação literal."""
+        first, last = self.chunk_at(start), self.chunk_at(max(start, end - 1))
+        if first is None or last is None or first.cid == last.cid:
+            return True
+        if not self.index.structural:
+            return True  # quebras de linha de texto podem ser apenas diagramação
+        chunks = self.chunks[first.cid:last.cid + 1]
+        if any(c.kind.startswith("attr:") for c in chunks):
+            return False
+        blocks = {"article", "section", "li", "tr", "td", "th", "p", "dd", "dt",
+                  "h1", "h2", "h3", "h4", "h5", "h6", "div"}
+        def block(chunk):
+            for no in [chunk.node, *self.index.ancestors(chunk.node)]:
+                if self.index.nodes[no].tag in blocks:
+                    return no
+            return 0
+        return len({block(c) for c in chunks}) == 1
 
     def find_loose(self, value: str, rule: str = "LEX-TOLERANTE") -> List[Evidence]:
         """
@@ -175,20 +202,18 @@ class EvidenceBase:
                 partes.append(r"[\W_]{0,3}".join(re.escape(d) for d in tok))
             else:
                 partes.append(re.escape(tok))
-        pattern = r"[\W_]{0,4}".join(partes)
+        pattern = r"(?<!\w)" + r"[\W_]{0,4}".join(partes) + r"(?!\w)"
         out: List[Evidence] = []
         for match in re.finditer(pattern, self.flow):
-            out.append(self.make_evidence(rule, 0.95, match.start(), match.end()))
-            if len(out) >= MAX_MATCHES:
-                break
+            if self._same_region(match.start(), match.end()):
+                out.append(self.make_evidence(rule, 0.95, match.start(), match.end()))
         return out
 
     def find_regex(self, pattern: str, rule: str, score: float = 0.9) -> List[Evidence]:
         out: List[Evidence] = []
         for match in re.finditer(pattern, self.flow):
-            out.append(self.make_evidence(rule, score, match.start(), match.end()))
-            if len(out) >= MAX_MATCHES:
-                break
+            if self._same_region(match.start(), match.end()):
+                out.append(self.make_evidence(rule, score, match.start(), match.end()))
         return out
 
     # ------------------------------------------------------------------
@@ -209,10 +234,9 @@ class EvidenceBase:
                 evidence = self.make_evidence(rule, 1.0, occ.start, occ.end,
                                               detail="com símbolo monetário" if occ.currency else "")
                 evidence.spans_chunks = 1
+                evidence.unit = occ.unit
                 out.append(evidence)
-                if len(out) >= MAX_MATCHES:
-                    return out
-        return out
+        return sorted(out, key=lambda e: e.flow_start)
 
     def numbers_present(self, values: Iterable[Decimal]) -> bool:
         return any(value in self._numbers_by_value for value in values)

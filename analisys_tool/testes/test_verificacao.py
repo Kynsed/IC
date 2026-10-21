@@ -117,10 +117,11 @@ class TestLocalidadeNoDom(unittest.TestCase):
         self.assertEqual(rel.registros[0].coesao.campos_fora, ["Editora"])
 
     def test_valor_repetido_e_reancorado_no_item_correto(self):
-        """O autor aparece nos dois produtos: não pode ser acusado de troca."""
+        """Valor repetido no item certo não prova o atributo sem rótulo."""
         rel = _verificar([self.REGISTRO_MISTURADO])
         resultado = _campo(rel, 0, "Autor")
-        self.assertEqual(resultado.veredito, Veredito.SUPORTADA)
+        self.assertEqual(resultado.veredito, Veredito.PARCIAL)
+        self.assertEqual(resultado.regra, "CTX-INCONCLUSIVO")
         self.assertIn("p2", resultado.evidencia_principal.path)
 
     def test_registro_coeso_nao_dispara_a_regra(self):

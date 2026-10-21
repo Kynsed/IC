@@ -1,0 +1,39 @@
+Benchmark: IC synthetic factual verification benchmark v1
+Corpus sintético; não é CIL nem resultado de chamadas reais a LLM.
+SHA-256: ce49f2116b73bac1563cbeb88560bd8e680bdee0b48829f868773faa3de9ccc2
+Casos executados: 21/23; erros: 0
+Rejeições contratuais esperadas: 2; pares antes/após: 21
+Antes/após abaixo inclui somente os mesmos casos concluídos e reverificados.
+Antes: TP=39 FP=14 FN=12; precisão=0.735849 recall=0.764706 F1=0.75
+Após reparo: TP=46 FP=4 FN=5; precisão=0.92 recall=0.901961 F1=0.910891
+Reparos (contagem de fatos): {"correct_facts_lost":0,"correct_facts_recovered":7,"incorrect_facts_introduced":0,"incorrect_facts_removed":10}
+Detector: acurácia das decisões=0.962963; cobertura conclusiva=0.962264; recall de erros sobre todos os anotados=0.857143; falsos suportes=0
+Precisão de erros entre fatos anotados=1.0; cobertura de anotação factual das predições de erro=1.0
+01_correct: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+02_extrinsic: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+03_intrinsic: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+04_duplicate_context: 0/3 decisões divergentes; inconclusivas=0; sem anotação=0
+05_normalization: 0/3 decisões divergentes; inconclusivas=0; sem anotação=0
+06_absent_null: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+07_nested_intrinsic: 0/5 decisões divergentes; inconclusivas=0; sem anotação=0
+08_layout_table_correct: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+09_layout_table_intrinsic: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+10_text_intrinsic: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+11_inline_intrinsic: 1/2 decisões divergentes; inconclusivas=1; sem anotação=0
+12_more_than_five_occurrences: 0/3 decisões divergentes; inconclusivas=0; sem anotação=0
+13_negation: 1/2 decisões divergentes; inconclusivas=1; sem anotação=0
+14_currency_identity: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+15_missing_field: 0/1 decisões divergentes; inconclusivas=0; sem anotação=0
+16_missing_record: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+17_reordered_records: 0/4 decisões divergentes; inconclusivas=0; sem anotação=0
+18_harmful_intervention: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+19_extra_record: 0/4 decisões divergentes; inconclusivas=0; sem anotação=0
+20_nested_reordered: 0/5 decisões divergentes; inconclusivas=0; sem anotação=0
+CONTRATO 21_required_field_missing: rejeição esperada; registros/0: campos ausentes=['idade'], extras=[].
+CONTRATO 22_wrong_scalar_type: rejeição esperada; registros/0/idade: esperado ['integer', 'null']; recebido str.
+23_token_boundaries: 0/2 decisões divergentes; inconclusivas=0; sem anotação=0
+Limitação: Corpus pequeno e sintético, sem estimativa de desempenho em dados CIL ou respostas reais de LLM.
+Limitação: Mesmos exemplos motivaram o desenvolvimento: conjunto de regressão público, não conjunto de teste independente para alegar generalização.
+Limitação: Exact-match de folhas JSON com identidades explícitas; variantes corretas exigem gold normalizado explicitamente.
+Limitação: Decisões PARCIAL, INVALIDA, NAO_VERIFICAVEL, ABSTENCAO e ERRO_EXTRACAO permanecem fora das três classes factuais conclusivas; a cobertura acompanha as métricas condicionais.
+Limitação: Após reparo deve ser avaliado contra o mesmo gold independente; melhorar precisão por abstenção pode reduzir recall.

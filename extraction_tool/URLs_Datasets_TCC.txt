@@ -1,5 +1,10 @@
 Dataset - Livros:
 =================
+SITUAÇÃO (21/10/2026): livrariacultura.com.br está fora do ar. A empresa teve a falência
+confirmada e encerrou as atividades em fevereiro de 2026; as páginas abaixo não podem ser
+acessadas nem reextraídas. Quando existe cópia no Wayback Machine, ela aparece ao lado da URL
+com a data do snapshot. Só a de 29/08/2025 é próxima das buscas; as demais são anteriores.
+
 Data das Buscas: (25/06/2025)
 =============================
 https://www.livrariacultura.com.br/o-banquete-42987643/p
@@ -11,8 +16,8 @@ https://www.livrariacultura.com.br/dom-casmurro-58469/p
 https://www.livrariacultura.com.br/o-velho-e-o-mar-42134379/p
 https://www.livrariacultura.com.br/as-vinhas-da-ira-2012148165/p
 https://www.livrariacultura.com.br/o-cortico-2112357490/p
-https://www.livrariacultura.com.br/raizes-do-brasil-42863004/p
-https://www.livrariacultura.com.br/o-estrangeiro-156646/p
+https://www.livrariacultura.com.br/raizes-do-brasil-42863004/p	Wayback (23/04/2024): https://web.archive.org/web/20240423203851/https://www3.livrariacultura.com.br/raizes-do-brasil-42863004/p
+https://www.livrariacultura.com.br/o-estrangeiro-156646/p	Wayback (27/05/2023): https://web.archive.org/web/20230527145112/https://www.livrariacultura.com.br/o-estrangeiro-156646/p
 https://www.livrariacultura.com.br/sidarta-2012807000/p
 https://www.livrariacultura.com.br/grande-sertao-veredas-2111919155/p
 https://www.livrariacultura.com.br/etica-spinoza-892193301/p
@@ -30,7 +35,7 @@ https://www.livrariacultura.com.br/anna-karenina-2112245808/p
 https://www.livrariacultura.com.br/a-montanha-magica-46354204/p
 https://www3.livrariacultura.com.br/por-quem-os-sinos-dobram-42202266/p
 https://www.livrariacultura.com.br/casa-grande-senzala-722208/p
-https://www.livrariacultura.com.br/a-divina-comedia-2112281393/p
+https://www.livrariacultura.com.br/a-divina-comedia-2112281393/p	Wayback (11/07/2022): https://web.archive.org/web/20220711161330/https://www3.livrariacultura.com.br/a-divina-comedia-2112281393/p
 https://www3.livrariacultura.com.br/os-sertoes-46490704/p
 https://www3.livrariacultura.com.br/discurso-do-metodo-7026622/p
 https://www3.livrariacultura.com.br/os-irmaos-karamazov-2112061395/p
@@ -42,12 +47,12 @@ https://www.livrariacultura.com.br/1984-2112283061/p
 https://www.livrariacultura.com.br/a-casa-dos-espiritos-46741718/p
 https://www.livrariacultura.com.br/a-cidade-do-sol-15061167/p
 https://www3.livrariacultura.com.br/a-etica-protestante-e-o-espirito-do-capitalismo-42154594/p
-https://www3.livrariacultura.com.br/a-hora-da-estrela-2112281834/p
+https://www3.livrariacultura.com.br/a-hora-da-estrela-2112281834/p	Wayback (29/08/2025): https://web.archive.org/web/20250829125448/https://www.livrariacultura.com.br/a-hora-da-estrela-2112281834/p
 https://www3.livrariacultura.com.br/a-insustentavel-leveza-do-ser-46490844/p
 https://www3.livrariacultura.com.br/a-obra-de-arte-na-era-de-sua-reprodutibilidade-tecnica-47905771/p
 https://www3.livrariacultura.com.br/a-origem-da-familia-da-propriedade-privada-e-do-estado-2112270879/p
 https://www3.livrariacultura.com.br/a-riqueza-das-nacoes-2112300984/p
-https://www3.livrariacultura.com.br/sociedade-do-espetaculo-a-85573/p
+https://www3.livrariacultura.com.br/sociedade-do-espetaculo-a-85573/p	Wayback (05/07/2024): https://web.archive.org/web/20240705083412/https://www.livrariacultura.com.br/sociedade-do-espetaculo-a-85573/p
 
 
 
@@ -72,8 +77,8 @@ https://bdta.abcd.usp.br/item/003191092		Inteligência artificial na predição 
 https://bdta.abcd.usp.br/item/003226324		Utilização da Inteligência Artificial na detecção das doenças periodontais: Mapeamento Sistemático
 
 
-IEEE Explore
-============
+IEEE Xplore
+===========
 (Busca por "Artificial Intelligence", ordenado por Relevância)
 
 Data das Buscas: (21/09/2025)
@@ -94,20 +99,22 @@ https://ieeexplore.ieee.org/document/9534539		Applications, Risks and Countermea
 Arxiv.org:
 ==========
 (Busca por "RAG", ordenado por Relevância)
+Nota (21/10/2026): cada URL está fixada na versão vigente em 21/09/2025 (sufixo vN). Sem o
+sufixo, o arXiv mostra a versão mais recente, que pode ter outro conteúdo ou título.
 
 Data das Buscas: (21/09/2025)
 =============================
-https://arxiv.org/abs/2509.00877		EviNote-RAG: Enhancing RAG Models via Answer-Supportive Evidence Notes
-https://arxiv.org/abs/2509.00449		GOSU: Retrieval-Augmented Generation with Global-Level Optimized Semantic Unit-Centric Framework
-https://arxiv.org/abs/2509.01092		REFRAG: Rethinking RAG based Decoding
-https://arxiv.org/abs/2509.01088		Privacy-Preserving Reasoning with Knowledge-Distilled Parametric Retrieval Augmented Generation
-https://arxiv.org/abs/2509.04642		Maestro: Joint Graph & Config Optimization for Reliable AI Agents
-https://arxiv.org/abs/2509.00798		Multimodal Iterative RAG for Knowledge Visual Question Answering	(Revised Date)
-https://arxiv.org/abs/2509.00100		MODE: Mixture of Document Experts for RAG
-https://arxiv.org/abs/2509.04716		KERAG: Knowledge-Enhanced Retrieval-Augmented Generation for Advanced Question Answering
-https://arxiv.org/abs/2509.04502		VaccineRAG: Boosting Multimodal Large Language Models' Immunity to Harmful RAG Samples
-https://arxiv.org/abs/2509.06650		Domain-Aware RAG: MoL-Enhanced RL for Efficient Training and Scalable Retrieval
-https://arxiv.org/abs/2509.07403		LongEmotion: Measuring Emotional Intelligence of Large Language Models in Long-Context Interaction
+https://arxiv.org/abs/2509.00877v1		EviNote-RAG: Enhancing RAG Models via Answer-Supportive Evidence Notes	(a v2 foi submetida em 21/09/2025, mas só anunciada em 22/09; na data da busca valia a v1)
+https://arxiv.org/abs/2509.00449v1		GOSU: Retrieval-Augmented Generation with Global-Level Optimized Semantic Unit-Centric Framework
+https://arxiv.org/abs/2509.01092v1		REFRAG: Rethinking RAG based Decoding
+https://arxiv.org/abs/2509.01088v1		Privacy-Preserving Reasoning with Knowledge-Distilled Parametric Retrieval Augmented Generation
+https://arxiv.org/abs/2509.04642v1		Maestro: Joint Graph & Config Optimization for Reliable AI Agents
+https://arxiv.org/abs/2509.00798v2		Multimodal Iterative RAG for Knowledge Visual Question Answering	(Revised Date) (versão atual: v7, de 22/04/2026, com outro título)
+https://arxiv.org/abs/2509.00100v1		MODE: Mixture of Document Experts for RAG
+https://arxiv.org/abs/2509.04716v1		KERAG: Knowledge-Enhanced Retrieval-Augmented Generation for Advanced Question Answering
+https://arxiv.org/abs/2509.04502v1		VaccineRAG: Boosting Multimodal Large Language Models' Immunity to Harmful RAG Samples
+https://arxiv.org/abs/2509.06650v1		Domain-Aware RAG: MoL-Enhanced RL for Efficient Training and Scalable Retrieval
+https://arxiv.org/abs/2509.07403v1		LongEmotion: Measuring Emotional Intelligence of Large Language Models in Long-Context Interaction
 
 
 
@@ -140,13 +147,15 @@ https://www.youtube.com/@BBCEarthScience/videos		(Canal em Inglês)
 Dataset - Sites e-Commerce:
 ===========================
 (Os mesmos tipos de produtos foram buscados em ambos os sites)
+Nota (21/10/2026): as buscas de geladeira Brastemp foram feitas originalmente com a grafia
+'bradestemp'; as URLs abaixo usam a grafia correta.
 
 Magazine Luiza: (data das Buscas 23/09/2025)
 ============================================
 https://www.magazineluiza.com.br/busca/televisor+smart+4k+lg/			
 https://www.magazineluiza.com.br/busca/televisor+smart+4k+samsung/			
 https://www.magazineluiza.com.br/busca/geladeira+duplex+frost+free+electrolux/ 	
-https://www.magazineluiza.com.br/busca/geladeira+duplex+frost+free+bradestemp/ 	
+https://www.magazineluiza.com.br/busca/geladeira+duplex+frost+free+brastemp/ 	
 https://www.magazineluiza.com.br/busca/microondas+electrolux/			
 https://www.magazineluiza.com.br/busca/microondas+brastemp/			
 https://www.magazineluiza.com.br/busca/liquidificador+mondial/		
@@ -156,15 +165,18 @@ https://www.magazineluiza.com.br/busca/ventilador+mondial+40cm/
 
 Amazon: (data das Buscas 26/09/2025)
 ====================================
-https://www.amazon.com.br/s?k=televisor+smart+4k+LG&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2B83B37453HFK&sprefix=televisor+smart+4k+lg%2Caps%2C215&ref=nb_sb_noss
-https://www.amazon.com.br/s?k=tv+smart+4k+samsung&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2DACB865P7ZDY&sprefix=tv+smart+4k+samsung%2Caps%2C758&ref=nb_sb_noss_1
-https://www.amazon.com.br/s?k=geladeira+duplex+frost+free+electrolux&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=36NY4FHHEN3G1&sprefix=geladeira+duplex+frost+free+electrolux%2Caps%2C463&ref=nb_sb_noss_1
-https://www.amazon.com.br/s?k=geladeira+duplex+frost+free+bradestemp&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1I2L8DIOSRHTN&sprefix=geladeira+duplex+frost+free+bradestemp%2Caps%2C460&ref=nb_sb_noss
-https://www.amazon.com.br/s?k=microondas+electrolux&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3NF6I63LSLGE8&sprefix=microondas+electrolux%2Caps%2C313&ref=nb_sb_noss_1
-https://www.amazon.com.br/s?k=liquidificador+mondial&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3HZUI5CGE9V3L&sprefix=liquidificador+mondial%2Caps%2C419&ref=nb_sb_noss_1
-https://www.amazon.com.br/s?k=liquidificador+philco&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=L3GOPM9LJUH8&sprefix=liquidificador+philco%2Caps%2C292&ref=nb_sb_noss_1
-https://www.amazon.com.br/s?k=ventilador+arno+40cm&crid=24WBTI5GOX2MJ&sprefix=ventilador%2Barno%2B40cm%2Caps%2C446&ref=nb_sb_ss_ts-doa-p_1_20
-https://www.amazon.com.br/s?k=ventilador+mondial+40cm&__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1E8RY84QIBDW7&sprefix=ventilador+mondial+40cm%2Caps%2C212&ref=nb_sb_noss_1
+Nota (21/10/2026): URLs reduzidas ao parâmetro de busca k; os parâmetros de sessão originais
+(crid, sprefix, ref) não fazem parte da busca. Em 21/10/2026 a Amazon respondeu "Algo deu
+errado" de forma intermitente, com e sem esses parâmetros; repetir mais tarde costuma resolver.
+https://www.amazon.com.br/s?k=televisor+smart+4k+LG
+https://www.amazon.com.br/s?k=tv+smart+4k+samsung
+https://www.amazon.com.br/s?k=geladeira+duplex+frost+free+electrolux
+https://www.amazon.com.br/s?k=geladeira+duplex+frost+free+brastemp
+https://www.amazon.com.br/s?k=microondas+electrolux
+https://www.amazon.com.br/s?k=liquidificador+mondial
+https://www.amazon.com.br/s?k=liquidificador+philco
+https://www.amazon.com.br/s?k=ventilador+arno+40cm
+https://www.amazon.com.br/s?k=ventilador+mondial+40cm
 
 
 
