@@ -1,9 +1,58 @@
 Dataset - Livros:
 =================
-SITUAÇÃO (21/10/2026): livrariacultura.com.br está fora do ar. A empresa teve a falência
-confirmada e encerrou as atividades em fevereiro de 2026; as páginas abaixo não podem ser
-acessadas nem reextraídas. Quando existe cópia no Wayback Machine, ela aparece ao lado da URL
-com a data do snapshot. Só a de 29/08/2025 é próxima das buscas; as demais são anteriores.
+SITUAÇÃO (21/10/2026): a Livraria Cultura, fonte original deste dataset, está fora do ar desde a
+falência (fevereiro de 2026). Os mesmos 40 títulos foram localizados na Livraria da Travessa e
+estão listados abaixo, na mesma ordem da lista original. A edição coincide com a da Cultura só
+onde isso está indicado; nos demais casos, foi escolhida uma edição completa e disponível. A lista
+original continua mais abaixo, como registro da coleta do TCC.
+
+Livraria da Travessa (URLs conferidas em 21/10/2026)
+====================================================
+https://www.travessa.com.br/o-banquete/artigo/8ab6668b-98bb-48f4-b1f2-67b6f95a1050	O Banquete — Platão (Editora 34, ISBN 9788573266474)
+https://www.travessa.com.br/fedon/artigo/7ce06ddc-868b-4b0e-80d4-67007c869754	Fédon — Platão (Vozes de Bolso, ISBN 9786557133651)
+https://www.travessa.com.br/totem-e-tabu/artigo/a6b221f7-1310-4487-ba75-a0367343bd5b	Totem e Tabu — Sigmund Freud (Edipro, ISBN 9786556601564)
+https://www.travessa.com.br/memorias-do-subsolo/artigo/1652d5b8-5454-40e4-a6cf-027cdfe2f563	Memórias do Subsolo — Fiódor Dostoiévski (Editora 34, ISBN 9788573261851)
+https://www.travessa.com.br/memorias-postumas-de-bras-cubas/artigo/5293e653-a0f3-463b-a5e2-b62a94842eac	Memórias Póstumas de Brás Cubas — Machado de Assis (Penguin-Companhia, ISBN 9788582850015) (mesma edição da Cultura)
+https://www.travessa.com.br/dom-casmurro/artigo/92b5e3b4-3cd6-43de-97db-473e2943f2ac	Dom Casmurro — Machado de Assis (Penguin-Companhia, ISBN 9788582850350)
+https://www.travessa.com.br/o-velho-e-o-mar/artigo/df675dd7-e465-49c6-a616-b1d1d3a42380	O Velho e o Mar — Ernest Hemingway (Bertrand Brasil, ISBN 9788528617986)
+https://www.travessa.com.br/as-vinhas-da-ira/artigo/1b031f78-88ad-4dcb-8b91-80800d98b7c0	As Vinhas da Ira — John Steinbeck (Record, ISBN 9786555874235)
+https://www.travessa.com.br/o-cortico/artigo/0d96de20-ea68-46ed-8284-ec42bec9a9bc	O Cortiço — Aluísio Azevedo (Penguin-Companhia, ISBN 9788582850343)
+https://www.travessa.com.br/raizes-do-brasil/artigo/38abdee5-78ea-4521-a3dc-4ea62407e166	Raízes do Brasil — Sérgio Buarque de Holanda (Companhia das Letras, ISBN 9788535925487)
+https://www.travessa.com.br/o-estrangeiro/artigo/78d7d437-ab09-4fd2-9132-878c85bfccc6	O Estrangeiro — Albert Camus (Record, ISBN 9788501014863)
+https://www.travessa.com.br/sidarta/artigo/4bfbbcf5-eab3-4077-881e-89dfa3edaad6	Sidarta — Hermann Hesse (Record, ISBN 9788501113863)
+https://www.travessa.com.br/grande-sertao-veredas/artigo/4968df24-5f33-4cf3-9444-8b1faf071452	Grande Sertão: Veredas — João Guimarães Rosa (Companhia das Letras, ISBN 9788535931983)
+https://www.travessa.com.br/etica/artigo/f8adab48-2938-4c9a-ad31-6c21b1a2ce1b	Ética — Spinoza (Autêntica, ISBN 9788575262498)
+https://www.travessa.com.br/a-republica/artigo/404d9458-8f1f-4d24-b930-dd11ba91f59c	A República — Platão (Lafonte, ISBN 9786558700340)
+https://www.travessa.com.br/politica/artigo/8358fc00-2305-4642-aa88-dda785f8f25b	Política — Aristóteles (Vozes, ISBN 9788532675354)
+https://www.travessa.com.br/fausto-capa-dura/artigo/9f627466-dce1-4061-a457-540a79c8d016	Fausto — Goethe (Autêntica, ISBN 9788551307137)
+https://www.travessa.com.br/memorial-do-convento/artigo/257f43f9-cf13-474f-b4f0-6551378f4867	Memorial do Convento — José Saramago (Companhia das Letras, ISBN 9788535930412)
+https://www.travessa.com.br/poesias-reunidas/artigo/65b5cece-4228-47c6-b7ef-072a0f757e4e	Poesias Reunidas — Oswald de Andrade (Companhia das Letras, ISBN 9788535927535) (autor provável; o endereço da Cultura não indicava o autor)
+https://www.travessa.com.br/antologia-poetica-manuel-bandeira/artigo/e6792928-c3a3-4b37-b75e-e040182a3853	Antologia Poética — Manuel Bandeira (Global, ISBN 9788526017726) (indisponível para compra em 21/10/2026)
+https://www.travessa.com.br/os-buddenbrook-decadencia-de-uma-familia/artigo/6092bffb-9784-4d63-af13-6f1d72c07f57	Os Buddenbrook — Thomas Mann (Companhia das Letras, ISBN 9788535926910)
+https://www.travessa.com.br/anna-karienina/artigo/490f82aa-b84f-4db8-9a4b-55553da0a70b	Anna Kariênina — Liev Tolstói (Editora 34, ISBN 9786555250572)
+https://www.travessa.com.br/a-montanha-magica/artigo/4842200d-0a3b-4b13-a371-2dca9a291608	A Montanha Mágica — Thomas Mann (Companhia das Letras, ISBN 9788535928204)
+https://www.travessa.com.br/por-quem-os-sinos-dobram/artigo/71c0222c-b5a8-4a8c-b367-ba4fe1bb1e4c	Por Quem os Sinos Dobram — Ernest Hemingway (Bertrand Brasil, ISBN 9788528618341)
+https://www.travessa.com.br/casa-grande-e-senzala-formacao-da-familia-brasileira-sob-o-regime-da-economia-patriarcal/artigo/f2ff76f1-d8e5-447c-afaf-eea9b75c9db2	Casa-Grande e Senzala — Gilberto Freyre (Global, ISBN 9788526008694)
+https://www.travessa.com.br/a-divina-comedia/artigo/58d95bed-3720-4cfe-89a7-64f8bcfe3153	A Divina Comédia — Dante Alighieri (Martin Claret, ISBN 9786559100156) (mesma edição da Cultura)
+https://www.travessa.com.br/os-sertoes/artigo/caddd84a-aa02-4d63-ad61-ffeba20565dd	Os Sertões — Euclides da Cunha (Penguin-Companhia, ISBN 9788582850879)
+https://www.travessa.com.br/discurso-do-metodo/artigo/efe3d325-0a4a-4140-a168-bff6cf1a6467	Discurso do Método — René Descartes (Edipro, ISBN 9786556602080)
+https://www.travessa.com.br/os-irmaos-karamazov/artigo/d3a2e892-f8bc-4cea-8586-e96774cf2886	Os Irmãos Karamázov — Fiódor Dostoiévski (Editora 34, ISBN 9788573264098)
+https://www.travessa.com.br/guerra-e-paz-graphic-novel/artigo/48d328ce-8f08-4153-a080-8b11e484702a	Guerra e Paz (graphic novel) — Liev Tolstói (Poseidon, ISBN 9786559574469) (indisponível para compra em 21/10/2026)
+https://www.travessa.com.br/1984/artigo/c2581bed-5e91-4b27-8ab0-1444b1260baf	1984 — George Orwell (Companhia das Letras, ISBN 9788535914849)
+https://www.travessa.com.br/a-casa-dos-espiritos/artigo/a7ddf45a-9db9-4cee-83ca-b66f0f251eea	A Casa dos Espíritos — Isabel Allende (Bertrand Brasil, ISBN 9788528622560)
+https://www.travessa.com.br/a-cidade-do-sol/artigo/a63f3117-3cb9-4670-a939-808fd2c27dd9	A Cidade do Sol — Khaled Hosseini (Globo Livros, ISBN 9788525060303) (romance de Hosseini; o endereço da Cultura não o distinguia do livro de Campanella)
+https://www.travessa.com.br/a-etica-protestante-e-o-espirito-do-capitalismo/artigo/9e7278ec-aa20-458b-be10-99ff0f9b7ff8	A Ética Protestante e o Espírito do Capitalismo — Max Weber (Vozes, ISBN 9788532663481)
+https://www.travessa.com.br/a-hora-da-estrela/artigo/63645efd-1c77-4683-a01c-bab4ea891d36	A Hora da Estrela — Clarice Lispector (Rocco, ISBN 9788532530660)
+https://www.travessa.com.br/a-insustentavel-leveza-do-ser/artigo/17963dfa-0699-4144-ac15-ed2bab880a38	A Insustentável Leveza do Ser — Milan Kundera (Companhia das Letras, ISBN 9788535928839)
+https://www.travessa.com.br/a-obra-de-arte-na-era-de-sua-reprodutibilidade-tecnica/artigo/1853e5de-a571-4aad-a0a0-dff03c1eccea	A Obra de Arte na Era de sua Reprodutibilidade Técnica — Walter Benjamin (L&PM Pocket, ISBN 9788525437167)
+https://www.travessa.com.br/a-origem-da-familia-da-propriedade-privada-e-do-estado/artigo/1b274015-7e52-446f-903a-23dc3e01351b	A Origem da Família, da Propriedade Privada e do Estado — Friedrich Engels (Lafonte, ISBN 9786586096590)
+https://www.travessa.com.br/a-riqueza-das-nacoes/artigo/b9d6feba-da44-48f5-a02b-97acb8436a37	A Riqueza das Nações — Adam Smith (Nova Fronteira, ISBN 9786556407074)
+https://www.travessa.com.br/a-sociedade-do-espetaculo-comentarios-sobre-a-sociedade-do-espetaculo/artigo/969ef8e4-ac72-4501-a483-80cda089e9c1	A Sociedade do Espetáculo — Guy Debord (Contraponto, ISBN 9788585910174)
+
+Livraria Cultura: fonte original (fora do ar)
+=============================================
+Quando existe cópia no Wayback Machine, ela aparece ao lado da URL com a data do snapshot. Só a de
+29/08/2025 é próxima das buscas; as demais são anteriores.
 
 Data das Buscas: (25/06/2025)
 =============================
