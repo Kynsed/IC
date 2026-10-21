@@ -23,6 +23,7 @@ from .config import Config, Veredito
 from .evidencias import Evidence, EvidenceBase
 from .normalizacao import (
     content_tokens,
+    currency_code,
     date_renderings,
     decimal_variants,
     ean_valid,
@@ -66,7 +67,10 @@ class ResultadoAfirmacao:
         return {
             "registro": self.afirmacao.registro,
             "campo": self.afirmacao.campo,
+            "campo_original": self.afirmacao.campo_original or self.afirmacao.campo,
+            "caminho": list(self.afirmacao.caminho),
             "valor": self.afirmacao.valor,
+            "valor_bruto": self.afirmacao.valor_bruto,
             "tipo": self.afirmacao.tipo,
             "veredito": self.veredito,
             "score": round(self.score, 4),
@@ -75,6 +79,7 @@ class ResultadoAfirmacao:
             "tokens_novos": self.tokens_novos[:20],
             "numeros_novos": self.numeros_novos[:20],
             "evidencias": [e.to_dict() for e in self.evidencias[:3]],
+            "total_evidencias": len(self.evidencias),
         }
 
 
@@ -119,7 +124,12 @@ def verificar_afirmacao(afirmacao: Afirmacao, base: EvidenceBase,
         "data": _verificar_data,
         "texto_longo": _verificar_texto_longo,
     }
-    return despacho.get(afirmacao.tipo, _verificar_texto_curto)(afirmacao, base, config)
+    resultado = despacho.get(afirmacao.tipo, _verificar_texto_curto)(afirmacao, base, config)
+    if (resultado.veredito == Veredito.SUPORTADA and resultado.evidencias and
+            all(e.negacao_externa for e in resultado.evidencias)):
+        resultado.veredito = Veredito.PARCIAL
+        resultado.notas.append("o trecho ocorre sob negação externa; presença lexical não comprova o fato")
+    return resultado
 
 
 # ---------------------------------------------------------------------------
@@ -132,17 +142,17 @@ def _verificar_texto_curto(afirmacao: Afirmacao, base: EvidenceBase,
 
     exatas = base.find_literal(valor)
     if exatas:
-        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "LEX-EXATO", exatas[:5])
+        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "LEX-EXATO", exatas)
 
     tolerantes = base.find_loose(valor)
     if tolerantes:
-        return _res(afirmacao, Veredito.SUPORTADA, 0.95, "LEX-TOLERANTE", tolerantes[:5],
+        return _res(afirmacao, Veredito.SUPORTADA, 0.95, "LEX-TOLERANTE", tolerantes,
                     notas=["casamento com variação de pontuação/espaçamento"])
 
     fuzzy_score, fuzzy_ev = base.best_fuzzy(valor)
     if fuzzy_score >= config.fuzzy_suporte and fuzzy_ev:
-        return _res(afirmacao, Veredito.SUPORTADA, fuzzy_score, "LEX-APROXIMADO", [fuzzy_ev],
-                    notas=[f"similaridade {fuzzy_score:.2f} com o trecho da fonte"])
+        return _res(afirmacao, Veredito.PARCIAL, fuzzy_score, "LEX-APROXIMADO", [fuzzy_ev],
+                    notas=[f"similaridade {fuzzy_score:.2f}; similaridade não comprova equivalência factual"])
 
     janela, janela_ev = base.best_window(valor)
     cobertura, faltantes = base.coverage(valor)
@@ -179,14 +189,15 @@ def _verificar_numerico(afirmacao: Afirmacao, base: EvidenceBase,
     valor = afirmacao.valor
     valores = decimal_variants(valor)
     if not valores:
-        return _verificar_texto_curto(afirmacao, base, config)
+        return _res(afirmacao, Veredito.INVALIDA, 0.0, "NUM-FORMATO",
+                    notas=["esperado um único literal numérico, sem concatenar números ou texto"])
 
     principal = max(valores, key=abs)
 
     # -- restrições de domínio (independem da fonte) ----------------------
     if afirmacao.tipo == "ano":
         ano = int(principal)
-        limite = date.today().year + config.ano_maximo_folga
+        limite = date.fromisoformat(config.data_referencia).year + config.ano_maximo_folga
         if not (config.ano_minimo <= ano <= limite):
             return _res(afirmacao, Veredito.INVALIDA, 1.0, "SIM-ANO-INTERVALO",
                         notas=[f"ano {ano} fora do intervalo plausível "
@@ -198,16 +209,20 @@ def _verificar_numerico(afirmacao: Afirmacao, base: EvidenceBase,
         return _res(afirmacao, Veredito.INVALIDA, 1.0, "SIM-NAO-INTEIRO",
                     notas=[f"esperado inteiro, obtido {principal}"])
 
-    # -- ancoragem literal (formato idêntico ao da página) -----------------
-    exatas = base.find_literal(valor)
-    if exatas:
-        rotulo = base.label_near(exatas[0].flow_start, exatas[0].flow_end,
-                                 afirmacao.rotulos, config.janela_rotulo)
-        nota = [f"rótulo '{rotulo}' nas proximidades"] if rotulo else []
-        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "NUM-LITERAL", exatas[:5], nota)
-
     # -- ancoragem numérica (equivalência de valor) ------------------------
     candidatas = base.find_numeric(valores)
+    unidade = currency_code(valor)
+    if unidade and candidatas:
+        compativeis = [e for e in candidatas if e.unit == unidade]
+        incertas = [e for e in candidatas if e.unit is None]
+        if compativeis:
+            candidatas = compativeis
+        elif incertas:
+            return _res(afirmacao, Veredito.PARCIAL, 0.5, "NUM-UNIDADE-INCERTA", incertas,
+                        notas=[f"magnitude presente, mas a unidade {unidade} não está comprovada"])
+        else:
+            return _res(afirmacao, Veredito.NAO_SUPORTADA, 0.0, "NUM-UNIDADE-DIVERGENTE", candidatas,
+                        notas=[f"mesma magnitude, porém moeda diferente de {unidade}"])
     if candidatas:
         rotuladas: List[Tuple[Evidence, str]] = []
         for evidencia in candidatas:
@@ -218,17 +233,19 @@ def _verificar_numerico(afirmacao: Afirmacao, base: EvidenceBase,
         if rotuladas:
             rotulo = rotuladas[0][1]
             evidencias = []
-            for evidencia, _ in rotuladas[:5]:
+            # A proximidade escolhe a apresentação inicial, mas não pode
+            # descartar ocorrências que a etapa contextual ainda avaliará.
+            for evidencia in candidatas:
                 evidencia.rule = "NUM-ANCORADO"
                 evidencias.append(evidencia)
             return _res(afirmacao, Veredito.SUPORTADA, 1.0, "NUM-ANCORADO", evidencias,
                         notas=[f"valor numérico equivalente encontrado junto ao rótulo '{rotulo}'"])
         monetarias = [e for e in candidatas if "monetário" in e.detail]
         if afirmacao.tipo == "moeda" and monetarias:
-            return _res(afirmacao, Veredito.SUPORTADA, 0.90, "NUM-MOEDA", monetarias[:5],
+            return _res(afirmacao, Veredito.SUPORTADA, 0.90, "NUM-MOEDA", monetarias,
                         notas=["valor equivalente com símbolo monetário na fonte"])
         return _res(afirmacao, Veredito.PARCIAL, config.score_numero_sem_rotulo,
-                    "NUM-SEM-ROTULO", candidatas[:5],
+                    "NUM-SEM-ROTULO", candidatas,
                     notas=["número presente na fonte, porém sem rótulo do campo "
                            "nas proximidades: a associação campo-valor não pôde ser confirmada"])
 
@@ -258,7 +275,7 @@ def _verificar_identificador(afirmacao: Afirmacao, base: EvidenceBase,
     if not encontradas:
         digitos = re.sub(r"[^0-9xX]", "", valor)
         if len(digitos) >= 8:
-            padrao = r"[\W_]{0,3}".join(re.escape(d) for d in digitos)
+            padrao = r"(?<!\w)" + r"[\W_]{0,3}".join(re.escape(d) for d in digitos) + r"(?!\w)"
             encontradas = base.find_regex(padrao, "ID-DIGITOS", 0.95)
 
     if encontradas:
@@ -266,7 +283,7 @@ def _verificar_identificador(afirmacao: Afirmacao, base: EvidenceBase,
         if checagem is False:
             notas.append("o identificador consta na fonte, mas seu dígito verificador "
                          "não fecha: possível erro da própria página")
-        return _res(afirmacao, veredito, 1.0, "ID-ANCORADO", encontradas[:5], notas)
+        return _res(afirmacao, veredito, 1.0, "ID-ANCORADO", encontradas, notas)
 
     if checagem is False:
         notas.append("identificador ausente da fonte e formalmente inválido: "
@@ -290,12 +307,12 @@ def _verificar_url(afirmacao: Afirmacao, base: EvidenceBase,
 
     encontradas = base.find_literal(valor) or base.find_loose(valor)
     if encontradas:
-        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "URL-ANCORADA", encontradas[:5])
+        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "URL-ANCORADA", encontradas)
 
     host = re.sub(r"^https?://", "", valor).split("/")[0]
     por_host = base.find_literal(host, rule="URL-HOST")
     if por_host:
-        return _res(afirmacao, Veredito.PARCIAL, 0.7, "URL-HOST", por_host[:3],
+        return _res(afirmacao, Veredito.PARCIAL, 0.7, "URL-HOST", por_host,
                     notas=[f"apenas o domínio '{host}' consta na fonte; "
                            "o caminho completo não foi confirmado"])
     return _res(afirmacao, Veredito.NAO_SUPORTADA, 1.0, "URL-AUSENTE",
@@ -310,7 +327,7 @@ def _verificar_email(afirmacao: Afirmacao, base: EvidenceBase,
                     notas=["endereço de e-mail sintaticamente inválido"])
     encontradas = base.find_literal(valor) or base.find_loose(valor)
     if encontradas:
-        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "EMAIL-ANCORADO", encontradas[:5])
+        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "EMAIL-ANCORADO", encontradas)
     return _res(afirmacao, Veredito.NAO_SUPORTADA, 1.0, "EMAIL-AUSENTE",
                 notas=["e-mail não encontrado na fonte"])
 
@@ -329,18 +346,18 @@ def _verificar_data(afirmacao: Afirmacao, base: EvidenceBase,
 
     encontradas = base.find_literal(valor) or base.find_loose(valor)
     if encontradas:
-        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "DATA-LITERAL", encontradas[:5])
+        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "DATA-LITERAL", encontradas)
 
     for forma in date_renderings(data):
         equivalentes = base.find_loose(forma)
         if equivalentes:
             return _res(afirmacao, Veredito.SUPORTADA, 0.95, "DATA-EQUIVALENTE",
-                        equivalentes[:5],
+                        equivalentes,
                         notas=[f"mesma data em formato distinto na fonte ('{forma}')"])
 
     if base.numbers_present({Decimal(data.year)}):
         parciais = base.find_numeric({Decimal(data.year)}, rule="DATA-ANO")
-        return _res(afirmacao, Veredito.PARCIAL, 0.5, "DATA-ANO", parciais[:2],
+        return _res(afirmacao, Veredito.PARCIAL, 0.5, "DATA-ANO", parciais,
                     notas=["apenas o ano foi confirmado na fonte; "
                            "dia e mês não puderam ser ancorados"])
 
@@ -363,7 +380,7 @@ def _verificar_texto_longo(afirmacao: Afirmacao, base: EvidenceBase,
         # re-ancoragem (calcular_coesao) que escolhe entre elas a que pertence
         # à subárvore do registro. Com uma só, um casamento em <meta> faria o
         # campo parecer vindo de outro item da página.
-        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "TXT-EXATO", exatas[:5],
+        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "TXT-EXATO", exatas,
                     notas=["transcrição literal do conteúdo da fonte"])
 
     janela, janela_ev = base.best_window(valor)
@@ -378,8 +395,9 @@ def _verificar_texto_longo(afirmacao: Afirmacao, base: EvidenceBase,
         notas.append("números não presentes na fonte: " + ", ".join(numeros_novos[:8]))
 
     if janela >= config.cobertura_suporte and not numeros_novos:
-        return _res(afirmacao, Veredito.SUPORTADA, janela, "TXT-COBERTURA-ALTA",
-                    evidencias, notas, faltantes, numeros_novos)
+        return _res(afirmacao, Veredito.PARCIAL, janela, "TXT-COBERTURA-ALTA",
+                    evidencias, notas + ["cobertura lexical não comprova relações, ordem ou negação"],
+                    faltantes, numeros_novos)
     if janela >= config.janela_suporte or cobertura >= config.cobertura_suporte:
         return _res(afirmacao, Veredito.PARCIAL, max(janela, cobertura),
                     "TXT-COBERTURA-PARCIAL", evidencias,
@@ -425,10 +443,8 @@ def _verificar_derivada(afirmacao: Afirmacao, base: EvidenceBase,
     if not tokens:
         return _res(afirmacao, Veredito.NAO_VERIFICAVEL, 0.0, "DER-VAZIO")
     if not tokens_origem:
-        resultado = _verificar_texto_longo(afirmacao, base, config)
-        resultado.notas.insert(0, f"campo-base '{afirmacao.base_derivacao}' indisponível: "
-                                  "verificado diretamente contra a fonte")
-        return resultado
+        return _res(afirmacao, Veredito.NAO_VERIFICAVEL, 0.0, "DER-BASE-INDISPONIVEL",
+                    notas=[f"campo-base '{afirmacao.base_derivacao}' indisponível; vínculo não demonstrado"])
 
     novos = [tok for tok in dict.fromkeys(tokens) if tok not in tokens_origem]
     cobertura = 1.0 - (len(novos) / len(set(tokens)))
@@ -467,9 +483,15 @@ def _verificar_derivada(afirmacao: Afirmacao, base: EvidenceBase,
                     [evidencia], notas + ["o resumo introduz conteúdo factual "
                                           "ausente do campo de origem"],
                     novos, numeros_novos)
+    negativos = {"nao", "nunca", "jamais", "not", "never", "sem", "without"}
+    literal = bool(re.search(r"(?<!\w)" + re.escape(normalize(valor)) + r"(?!\w)", normalize(origem)))
+    polaridade_igual = (set(tokenize(valor)) & negativos) == (set(tokenize(origem)) & negativos)
+    if literal and polaridade_igual:
+        return _res(afirmacao, Veredito.SUPORTADA, 1.0, "DER-VINCULADO",
+                    [evidencia], notas + ["trecho literal da base, sem supressão de negação"])
     if cobertura >= 0.90:
-        return _res(afirmacao, Veredito.SUPORTADA, cobertura, "DER-VINCULADO",
-                    [evidencia], notas)
+        return _res(afirmacao, Veredito.PARCIAL, cobertura, "DER-VINCULO-PARCIAL",
+                    [evidencia], notas + ["vocabulário comum não comprova equivalência factual"])
     if cobertura >= config.resumo_cobertura_minima:
         return _res(afirmacao, Veredito.PARCIAL, cobertura, "DER-VINCULO-PARCIAL",
                     [evidencia], notas + ["parte do vocabulário do resumo não deriva "

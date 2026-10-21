@@ -19,17 +19,22 @@ sejam auditáveis.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import copy
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 from .afirmacoes import Registro, carregar_registros, decompor
 from .config import Config, Veredito
+from .contrato import ContractError, canonical_json, schema_sha256, validate_records
+from .contexto import verificar_contexto, _identidade
+from .proveniencia import carregar_manifesto, sha256
 from .dom import SourceIndex, parse_source
 from .evidencias import EvidenceBase
 from .metricas import agregar, avaliar_contra_gabarito, confiabilidade_registro
 from .predicados import ResultadoAfirmacao, verificar_afirmacao
-from .reparo import Sugestao, sugerir_correcoes
+from .reparo import Sugestao, sugerir_correcoes, aplicar_reparos
 from .restricoes import (
     Coesao,
     ResultadoRestricao,
@@ -38,7 +43,7 @@ from .restricoes import (
     calcular_coesao,
 )
 
-__all__ = ["RelatorioRegistro", "Relatorio", "verificar", "verificar_dados"]
+__all__ = ["RelatorioRegistro", "Relatorio", "verificar", "verificar_dados", "reparar_e_reverificar"]
 
 NIVEL_OK, NIVEL_ATENCAO, NIVEL_CRITICO = "ok", "atencao", "critico"
 
@@ -52,14 +57,15 @@ class RelatorioRegistro:
     restricoes: List[ResultadoRestricao]
     confiabilidade: float
     sugestoes: Dict[str, List[Sugestao]] = field(default_factory=dict)
+    contextos: dict = field(default_factory=dict)
 
     @property
     def nivel(self) -> str:
-        if any(r.alucinacao for r in self.resultados):
+        if any(r.alucinacao or r.veredito == Veredito.ERRO_EXTRACAO for r in self.resultados):
             return NIVEL_CRITICO
         if any(r.violada and r.severidade == "alta" for r in self.restricoes):
             return NIVEL_CRITICO
-        if any(r.veredito == Veredito.PARCIAL for r in self.resultados) or \
+        if not self.resultados or any(r.veredito in (Veredito.PARCIAL, Veredito.NAO_VERIFICAVEL, Veredito.ABSTENCAO) for r in self.resultados) or \
            any(r.violada for r in self.restricoes):
             return NIVEL_ATENCAO
         return NIVEL_OK
@@ -69,6 +75,8 @@ class RelatorioRegistro:
             "indice": self.registro.indice,
             "nivel": self.nivel,
             "confiabilidade": self.confiabilidade,
+            "dados_originais": self.registro.dados,
+            "contextos": self.contextos,
             "coesao": {
                 "valor": round(self.coesao.valor, 4),
                 "aplicavel": self.coesao.aplicavel,
@@ -94,6 +102,8 @@ class Relatorio:
     metricas: Dict[str, Any]
     avaliacao_gabarito: Optional[Dict[str, Any]] = None
     gerado_em: str = ""
+    schema: Optional[dict] = None
+    proveniencia: dict = field(default_factory=dict)
 
     @property
     def afirmacoes(self) -> List[ResultadoAfirmacao]:
@@ -113,6 +123,8 @@ class Relatorio:
                 "indice": self.descricao_indice,
             },
             "config": self.config.to_dict(),
+            "schema": self.schema,
+            "proveniencia": self.proveniencia,
             "metricas": self.metricas,
             "avaliacao_gabarito": self.avaliacao_gabarito,
             "restricoes_conjunto": [r.to_dict() for r in self.restricoes_conjunto],
@@ -135,13 +147,13 @@ def _propagar_base_derivada(resultados: List[ResultadoAfirmacao]) -> None:
                 Veredito.SUPORTADA, Veredito.PARCIAL):
             continue
         base = por_campo.get(afirmacao.base_derivacao or "")
-        if base is None or not base.alucinacao:
+        if base is not None and base.veredito == Veredito.SUPORTADA:
             continue
-        resultado.veredito = Veredito.NAO_SUPORTADA
-        resultado.regra = "DER-BASE-NAO-ANCORADA"
+        resultado.veredito = Veredito.NAO_SUPORTADA if base is None or base.alucinacao else Veredito.PARCIAL
+        resultado.regra = "DER-BASE-NAO-ANCORADA" if resultado.alucinacao else "DER-BASE-INCONCLUSIVA"
         resultado.notas.append(
             f"vínculo com '{afirmacao.base_derivacao}' íntegro, porém o próprio "
-            f"campo-base não está ancorado na fonte: alucinação herdada")
+            f"campo-base não tem suporte pleno após a verificação contextual")
 
 
 def _aplicar_localidade(resultados: List[ResultadoAfirmacao], coesao: Coesao,
@@ -177,12 +189,18 @@ def verificar_dados(registros_brutos: Sequence[Dict[str, Any]], fonte_bruta: str
                     com_reparo: bool = True,
                     forcar_tipo_fonte: Optional[str] = None,
                     origem_extracao: str = "<memória>",
-                    origem_fonte: str = "<memória>") -> Relatorio:
+                    origem_fonte: str = "<memória>", schema: Optional[dict] = None,
+                    proveniencia: Optional[dict] = None) -> Relatorio:
     """Executa o pipeline sobre dados já carregados em memória."""
-    config = config or Config()
+    config = copy.deepcopy(config) if config is not None else Config()
+    config.validate()
+    if not isinstance(fonte_bruta, str) or not fonte_bruta.strip():
+        raise ValueError("Fonte vazia ou não textual.")
+    if forcar_tipo_fonte not in (None, "html", "text"):
+        raise ValueError("Tipo de fonte inválido.")
     indice: SourceIndex = parse_source(fonte_bruta, forcar_tipo_fonte)
     base = EvidenceBase(indice)
-    registros = decompor(registros_brutos)
+    registros = decompor(registros_brutos, schema)
 
     relatorios: List[RelatorioRegistro] = []
     coesoes: List[Coesao] = []
@@ -190,10 +208,23 @@ def verificar_dados(registros_brutos: Sequence[Dict[str, Any]], fonte_bruta: str
 
     for registro in registros:
         resultados = [verificar_afirmacao(a, base, config) for a in registro.afirmacoes]
+        grupos = defaultdict(list)
+        for resultado in resultados:
+            grupos[resultado.afirmacao.escopo].append(resultado)
+        por_escopo = {}
+        for escopo, grupo in grupos.items():
+            contexto = list(grupo)
+            if not any(_identidade(r) for r in grupo):
+                # Objetos que agrupam atributos herdam a entidade mais próxima;
+                # não podem buscar atributos livremente em toda a página.
+                for tamanho in range(len(escopo) - 1, -1, -1):
+                    ancestrais = [r for r in grupos.get(escopo[:tamanho], []) if _identidade(r)]
+                    if ancestrais:
+                        contexto.extend(copy.deepcopy(ancestrais))
+                        break
+            por_escopo[escopo] = verificar_contexto(contexto, base, config)
+        coesao = next(iter(por_escopo.values())) if len(por_escopo) == 1 else Coesao(0, None, "", [], [], False)
         _propagar_base_derivada(resultados)
-
-        coesao = calcular_coesao(resultados, base, config)
-        _aplicar_localidade(resultados, coesao, indice.structural)
         restricoes = avaliar_registro(registro, resultados, base, config, coesao)
 
         # Um registro sem fundamento na página não tem subárvore de onde extrair
@@ -208,7 +239,7 @@ def verificar_dados(registros_brutos: Sequence[Dict[str, Any]], fonte_bruta: str
                 if not resultado.alucinacao:
                     continue
                 candidatos = [] if infundado else sugerir_correcoes(
-                    resultado, base, coesao, config)
+                    resultado, base, por_escopo[resultado.afirmacao.escopo], config)
                 sugestoes[resultado.afirmacao.id] = candidatos
 
         relatorios.append(RelatorioRegistro(
@@ -216,6 +247,10 @@ def verificar_dados(registros_brutos: Sequence[Dict[str, Any]], fonte_bruta: str
             restricoes=restricoes,
             confiabilidade=confiabilidade_registro(resultados, restricoes),
             sugestoes=sugestoes,
+            contextos={"/" + "/".join(map(str, escopo)): {
+                "ancora": c.caminho_ancora, "aplicavel": c.aplicavel,
+                "valor": c.valor, "campos_fora": c.campos_fora}
+                for escopo, c in por_escopo.items()},
         ))
         coesoes.append(coesao)
         resultados_por_registro.append(resultados)
@@ -235,7 +270,13 @@ def verificar_dados(registros_brutos: Sequence[Dict[str, Any]], fonte_bruta: str
         for nivel in (NIVEL_OK, NIVEL_ATENCAO, NIVEL_CRITICO)
     }
 
-    avaliacao = avaliar_contra_gabarito(todas_afirmacoes, gabarito) if gabarito else None
+    avaliacao = avaliar_contra_gabarito(todas_afirmacoes, gabarito) if gabarito is not None else None
+    proveniencia = copy.deepcopy(proveniencia) if proveniencia else {
+        "estado": "dados_em_memoria", "execucao_id": None}
+    proveniencia.update({
+        "fonte_texto_sha256": sha256(fonte_bruta.encode("utf-8")),
+        "registros_canonicos_sha256": sha256(canonical_json(registros_brutos).encode("utf-8")),
+        "schema_sha256": schema_sha256(schema) if schema else None})
 
     return Relatorio(
         origem_extracao=origem_extracao,
@@ -248,6 +289,8 @@ def verificar_dados(registros_brutos: Sequence[Dict[str, Any]], fonte_bruta: str
         metricas=metricas,
         avaliacao_gabarito=avaliacao,
         gerado_em=datetime.now().isoformat(timespec="seconds"),
+        schema=copy.deepcopy(schema),
+        proveniencia=proveniencia,
     )
 
 
@@ -255,7 +298,7 @@ def verificar(extracao: str | Path, fonte: str | Path,
               config: Optional[Config] = None,
               gabarito: Any = None,
               com_reparo: bool = True,
-              forcar_tipo_fonte: Optional[str] = None) -> Relatorio:
+              forcar_tipo_fonte: Optional[str] = None, schema: Optional[dict] = None) -> Relatorio:
     """
     Verifica um arquivo de extração contra a fonte correspondente.
 
@@ -263,10 +306,69 @@ def verificar(extracao: str | Path, fonte: str | Path,
     `fonte`    -- HTML bruto da página ou `{task_id}_text.txt`.
     """
     extracao, fonte = Path(extracao), Path(fonte)
-    registros = carregar_registros(extracao)
-    bruto = fonte.read_text(encoding="utf-8-sig", errors="replace")
+    schema, proveniencia = carregar_manifesto(extracao, fonte, schema)
+    registros = carregar_registros(extracao, schema)
+    if extracao.suffix.lower() == ".csv":
+        proveniencia["transformacoes"] = ["CSV decodificado conforme tipos explícitos do schema" if schema else "CSV mantido como strings; tipos originais não recuperáveis"]
+    bruto = fonte.read_text(encoding="utf-8-sig")
     return verificar_dados(
         registros, bruto, config=config, gabarito=gabarito, com_reparo=com_reparo,
         forcar_tipo_fonte=forcar_tipo_fonte,
         origem_extracao=str(extracao), origem_fonte=str(fonte),
+        schema=schema, proveniencia=proveniencia,
     )
+
+
+def reparar_e_reverificar(relatorio: Relatorio, fonte_bruta: str):
+    """Aplica candidatos tipados individualmente e só aceita suporte contextual final.
+
+    A ausência de candidato pode virar abstenção se o contrato permitir; isso
+    é remoção de erro, não recuperação de fato. Toda tentativa é auditada.
+    """
+    dados = copy.deepcopy([r.registro.dados for r in relatorio.registros])
+    if sha256(fonte_bruta.encode("utf-8")) != relatorio.proveniencia.get("fonte_texto_sha256"):
+        raise ContractError("Reparo exige o mesmo snapshot textual da verificação original.")
+    mudancas = []
+    def reverificar(candidatos):
+        return verificar_dados(candidatos, fonte_bruta, config=copy.deepcopy(relatorio.config),
+            com_reparo=False, forcar_tipo_fonte=relatorio.modo_fonte,
+            origem_extracao=relatorio.origem_extracao, origem_fonte=relatorio.origem_fonte,
+            schema=relatorio.schema, proveniencia={**relatorio.proveniencia, "etapa": "pos_reparo"})
+    atual = reverificar(dados)
+    for bloco in relatorio.registros:
+        for chave, sugestoes in bloco.sugestoes.items():
+            antes = next(r for r in atual.afirmacoes if r.afirmacao.id == chave)
+            if not antes.alucinacao:
+                continue
+            # Um reparo não pode trocar a entidade consultada por outra da página.
+            identidade = antes.afirmacao.identidade or antes.afirmacao.campo_original.casefold() in {
+                "nome", "name", "nome completo", "full name", "título", "titulo", "title",
+                "produto", "product", "id", "identificador", "identifier"}
+            if identidade:
+                sugestoes = []
+            tentativas = [[s] for s in sugestoes] + [[]]
+            for proposta in tentativas:
+                log = {"afirmacao": chave, "antes": antes.afirmacao.valor_bruto,
+                       "candidato": proposta[0].valor if proposta else None,
+                       "evidencia": proposta[0].to_dict() if proposta else None}
+                try:
+                    candidatos = aplicar_reparos(dados, {chave: proposta}, schema=relatorio.schema)
+                    pos = reverificar(candidatos)
+                    depois = next(r for r in pos.afirmacoes if r.afirmacao.id == chave)
+                    antigos = {r.afirmacao.id: r for r in atual.afirmacoes}
+                    regressao = any(antigos[r.afirmacao.id].veredito == Veredito.SUPORTADA
+                                     and r.veredito != Veredito.SUPORTADA for r in pos.afirmacoes)
+                    aceito = (depois.veredito == (Veredito.SUPORTADA if proposta else Veredito.ABSTENCAO)
+                              and not regressao)
+                    log.update(depois=depois.afirmacao.valor_bruto, veredito_pos=depois.veredito,
+                               aceito=aceito, motivo="suporte confirmado" if aceito and proposta else
+                               "abstenção permitida" if aceito else "sem suporte pleno ou regressão")
+                    if aceito:
+                        dados, atual = candidatos, pos
+                except (ValueError, TypeError) as exc:
+                    aceito = False
+                    log.update(aceito=False, motivo=str(exc))
+                mudancas.append(log)
+                if aceito:
+                    break
+    return dados, atual, mudancas

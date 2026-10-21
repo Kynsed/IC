@@ -37,7 +37,7 @@ from .relatorio import (
 )
 from .reparo import Sugestao, aplicar_reparos, sugerir_correcoes
 from .restricoes import ResultadoRestricao, calcular_coesao
-from .verificador import Relatorio, RelatorioRegistro, verificar, verificar_dados
+from .verificador import Relatorio, RelatorioRegistro, verificar, verificar_dados, reparar_e_reverificar
 
 __version__ = "1.0.0"
 
@@ -50,7 +50,7 @@ __all__ = [
     "ResultadoRestricao", "calcular_coesao",
     "Sugestao", "sugerir_correcoes", "aplicar_reparos",
     "agregar", "avaliar_contra_gabarito",
-    "Relatorio", "RelatorioRegistro", "verificar", "verificar_dados",
+    "Relatorio", "RelatorioRegistro", "verificar", "verificar_dados", "reparar_e_reverificar",
     "escrever_json", "escrever_csv", "escrever_html", "gerar_html", "resumo_texto",
     "__version__",
 ]

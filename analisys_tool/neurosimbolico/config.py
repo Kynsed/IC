@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import math
+from datetime import date
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict
@@ -76,6 +78,22 @@ class Config:
 
     # -- reparo -------------------------------------------------------------
     sugestoes_por_campo: int = 3
+    data_referencia: str = field(default_factory=lambda: date.today().isoformat())
+
+    def validate(self) -> None:
+        date.fromisoformat(self.data_referencia)
+        for nome in ("cobertura_suporte", "cobertura_parcial", "janela_suporte",
+                     "fuzzy_suporte", "fuzzy_parcial", "score_numero_sem_rotulo",
+                     "resumo_cobertura_minima", "coesao_minima"):
+            valor = getattr(self, nome)
+            if type(valor) not in (int, float) or not math.isfinite(valor) or not 0 <= valor <= 1:
+                raise ValueError(f"{nome} deve estar entre 0 e 1.")
+        for nome in ("janela_rotulo", "resumo_max_palavras", "ano_minimo", "ano_maximo_folga",
+                     "minimo_campos_coesao", "janela_linhas_texto", "sugestoes_por_campo"):
+            if type(getattr(self, nome)) is not int or getattr(self, nome) < 0:
+                raise ValueError(f"{nome} deve ser inteiro não negativo.")
+        if self.cobertura_parcial > self.cobertura_suporte or self.fuzzy_parcial > self.fuzzy_suporte:
+            raise ValueError("Limiar parcial não pode superar o de suporte.")
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -84,4 +102,8 @@ class Config:
     def from_file(cls, caminho: str | Path) -> "Config":
         dados = json.loads(Path(caminho).read_text(encoding="utf-8"))
         conhecidos = {campo for campo in cls().to_dict()}
-        return cls(**{k: v for k, v in dados.items() if k in conhecidos})
+        if not isinstance(dados, dict) or set(dados) - conhecidos:
+            raise ValueError("Configuração contém campos desconhecidos ou formato inválido.")
+        config = cls(**dados)
+        config.validate()
+        return config

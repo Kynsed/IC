@@ -116,9 +116,11 @@ def _gabarito_por_chave(gabarito: Any) -> Dict[str, bool]:
         for chave, valor in gabarito.items():
             saida[chave] = _para_bool(valor)
         return saida
-    for indice, registro in enumerate(gabarito or []):
+    if not isinstance(gabarito, list):
+        raise ValueError("Gabarito deve ser objeto por chave ou lista por registro.")
+    for indice, registro in enumerate(gabarito):
         if not isinstance(registro, dict):
-            continue
+            raise ValueError(f"Registro {indice} do gabarito deve ser objeto.")
         for campo, valor in registro.items():
             saida[f"r{indice}:{campo}"] = _para_bool(valor)
     return saida
@@ -128,7 +130,11 @@ def _para_bool(valor: Any) -> bool:
     if isinstance(valor, bool):
         return valor
     texto = str(valor).strip().lower()
-    return texto in ("true", "1", "sim", "correto", "ok", "certo", "y", "yes")
+    if texto in ("true", "1", "sim", "correto", "ok", "certo", "y", "yes"):
+        return True
+    if texto in ("false", "0", "não", "nao", "incorreto", "errado", "n", "no"):
+        return False
+    raise ValueError(f"Rótulo de gabarito desconhecido: {valor!r}")
 
 
 def avaliar_contra_gabarito(resultados: Sequence[ResultadoAfirmacao],
@@ -148,7 +154,11 @@ def avaliar_contra_gabarito(resultados: Sequence[ResultadoAfirmacao],
         "permissivo": Veredito.REPROVADOS,
         "estrito": Veredito.REPROVADOS + (Veredito.PARCIAL,),
     }
-    saida: Dict[str, Any] = {"afirmacoes_anotadas": 0}
+    chaves = {r.afirmacao.id for r in resultados}
+    saida: Dict[str, Any] = {"afirmacoes_anotadas": 0,
+        "afirmacoes_sem_rotulo": sorted(chaves - set(referencia)),
+        "rotulos_sem_afirmacao": sorted(set(referencia) - chaves),
+        "escopo": "detecção entre afirmações presentes e anotadas; não mede recuperação de fatos omitidos"}
     detalhes: List[Dict[str, Any]] = []
 
     for nome, positivos in regimes.items():

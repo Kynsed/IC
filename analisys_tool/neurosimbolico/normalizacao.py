@@ -135,7 +135,19 @@ def word_count(text: str) -> int:
 # ---------------------------------------------------------------------------
 
 _NUM_RE = re.compile(r"(?<![\w])[+-]?\d(?:[\d.,]*\d)?")
-_CURRENCY_HINT_RE = re.compile(r"(r\$|us\$|\$|€|£|brl|usd|eur)\s*$")
+_CURRENCY_HINT_RE = re.compile(r"(r\$|us\$|\$|€|£|brl|usd|eur|gbp)\s*$", re.I)
+_CURRENCY_CODES = {"r$": "BRL", "brl": "BRL", "us$": "USD", "usd": "USD",
+                   "€": "EUR", "eur": "EUR", "£": "GBP", "gbp": "GBP", "$": "DOLLAR"}
+_NUM_LITERAL_RE = re.compile(
+    r"\s*(?:(?:r\$|us\$|\$|€|£|brl|usd|eur|gbp)\s*)?"
+    r"([+-]?\d(?:[\d.,]*\d)?)"
+    r"\s*(?:(?:r\$|us\$|\$|€|£|brl|usd|eur|gbp))?\s*", re.I)
+
+
+def currency_code(raw: str) -> Optional[str]:
+    """Unidade declarada; '$' sozinho permanece ambíguo, sem assumir USD."""
+    found = re.search(r"r\$|us\$|\$|€|£|\b(?:brl|usd|eur|gbp)\b", raw, re.I)
+    return _CURRENCY_CODES[found.group().lower()] if found else None
 
 
 class NumberOccurrence(NamedTuple):
@@ -145,10 +157,19 @@ class NumberOccurrence(NamedTuple):
     end: int
     raw: str
     currency: bool
+    unit: Optional[str] = None
 
 
 def _strip_to_numeric(raw: str) -> str:
-    return re.sub(r"[^\d,.\-+]", "", raw).strip(" ,.")
+    # Um valor deve conter exatamente um literal; remover letras juntava
+    # "10 ou 20" em 1020 e criava um fato que não foi afirmado.
+    text = clean_whitespace(str(raw))
+    units = {_CURRENCY_CODES[m.lower()] for m in re.findall(
+        r"r\$|us\$|\$|€|£|\b(?:brl|usd|eur|gbp)\b", text, re.I)}
+    if len(units) > 1:
+        return ""
+    match = _NUM_LITERAL_RE.fullmatch(text)
+    return match.group(1) if match else ""
 
 
 def decimal_variants(raw: str) -> Set[Decimal]:
@@ -173,6 +194,12 @@ def decimal_variants(raw: str) -> Set[Decimal]:
     if has_comma and has_dot:
         dec = "," if s.rfind(",") > s.rfind(".") else "."
         thou = "." if dec == "," else ","
+        integer, fractional = s.rsplit(dec, 1)
+        groups = integer.split(thou)
+        if (not fractional.isdigit() or dec in integer or
+                not (1 <= len(groups[0]) <= 3) or
+                not all(len(p) == 3 and p.isdigit() for p in groups[1:])):
+            return set()
         candidates.add(s.replace(thou, "").replace(dec, "."))
     elif has_comma or has_dot:
         sep = "," if has_comma else "."
@@ -213,13 +240,18 @@ def iter_numbers(text: str) -> Iterator[NumberOccurrence]:
         if not values:
             continue
         start = m.start()
-        prefix = text[max(0, start - 6):start]
+        prefix = text[max(0, start - 8):start]
+        hint = _CURRENCY_HINT_RE.search(prefix)
+        suffix = re.match(r"\s*(r\$|us\$|\$|€|£|brl\b|usd\b|eur\b|gbp\b)",
+                          text[start + len(raw):], re.I)
+        unit = currency_code(hint.group()) if hint else (currency_code(suffix.group()) if suffix else None)
         yield NumberOccurrence(
             values=frozenset(values),
             start=start,
             end=start + len(raw),
             raw=raw,
-            currency=bool(_CURRENCY_HINT_RE.search(prefix)),
+            currency=bool(hint or suffix),
+            unit=unit,
         )
 
 
@@ -346,7 +378,8 @@ _ERROR_VALUES = {"erro na extracao", "erro na api", "erro"}
 
 def looks_like_html(text: str) -> bool:
     """Distingue o HTML bruto do texto já limpo salvo pelo extraction_tool."""
-    return bool(_HTML_TAG_RE.search(text[:20000])) and text.count("<") > 5
+    return bool(_HTML_TAG_RE.search(text[:20000]) or
+                re.search(r"<(?:article|section|tr|td|dl|dt|dd)\b", text[:20000], re.I))
 
 
 def is_abstention(value) -> bool:

@@ -46,33 +46,51 @@
                                 <label for="fields" class="form-label">Campos para Extração</label>
                                 <input type="text" class="form-control" id="fields" placeholder="autor, número de páginas, editora, preço, descrição" required>
                                 <div class="form-text">Insira os campos que deseja extrair, separados por vírgula.</div>
-                                <!-- Nova nota sobre o resumo automático -->
                                 <div class="form-text text-muted mt-1">
-                                    <i class="bi bi-info-circle"></i> Se você incluir um campo como 'descrição', 'detalhes', etc., um campo 'Resumo' (máx. 30 palavras) será adicionado automaticamente aos resultados.
+                                    <i class="bi bi-info-circle"></i> Ao usar a lista de campos, 'descrição' ou 'detalhes' inclui 'Resumo' no contrato e solicita até 30 palavras ao modelo. Um schema explícito não recebe campos adicionais.
                                 </div>
                             </div>
+
+                            <details class="mb-3">
+                                <summary>Schema JSON opcional</summary>
+                                <label for="schema-json" class="form-label mt-2">Contrato de extração</label>
+                                <textarea class="form-control font-monospace" id="schema-json" rows="8"
+                                    placeholder='{"type":"array","items":{"type":"object","properties":{"nome":{"type":["string","null"]}},"required":["nome"],"additionalProperties":false}}'></textarea>
+                                <div class="form-text">Substitui a lista de campos. Aceita objetos e listas aninhados. Permita null nos campos que podem estar ausentes; propriedades extras são rejeitadas.</div>
+                            </details>
                             
                             <!-- Seleção de Modelo LLM -->
                             <div class="mb-3">
                                 <label for="model-provider" class="form-label">Modelo LLM</label>
-                                <select class="form-select" id="model-provider">
-                                    <option value="openai" selected>OpenAI GPT-4o Mini</option>
-                                    <option value="openai-vision">OpenAI GPT-4o Vision (para imagens)</option>
-                                    <option value="gemini-3.6-flash">Google Gemini 3.6 Flash</option>
-                                    <option value="gemini-3.1-flash-lite">Google Gemini 3.1 Flash Lite</option>
-                                    <option value="gemini-flash-latest">Google Gemini Flash Latest</option>
+                                <select class="form-select" id="model-provider" name="model_provider">
+                                    <!-- IDs oficiais atuais da Gemini API -->
+                                    <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash</option>
+                                    <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+                                    <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
                                 </select>
                             </div>
                             
+                            <div class="mb-3">
+                                <label for="thinking-level" class="form-label">Nível de raciocínio</label>
+                                <select class="form-select" id="thinking-level" name="thinking_level">
+                                    <option value="default" selected>Padrão do modelo</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+
                             <div class="mb-3" id="gemini-key-container">
                                 <label for="gemini-api-key" class="form-label">Chave da API do Gemini</label>
                                 <input type="password" class="form-control" id="gemini-api-key"
                                        autocomplete="off" spellcheck="false" placeholder="AIza...">
+                                <div class="form-text">Opcional se <code>GEMINI_API_KEY</code> estiver configurada no servidor/.env.</div>
                             </div>
 
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="use-mock">
                                 <label class="form-check-label" for="use-mock">Usar dados de exemplo (para teste)</label>
+                                <div class="form-text">Substitui a página por um exemplo local. A chamada ao modelo continua usando a API e pode ter custo.</div>
                             </div>
                             
                             <div class="d-grid gap-2">
@@ -105,6 +123,8 @@
                         <div id="status-message" class="alert alert-info">
                             Iniciando processamento...
                         </div>
+
+                        <div id="audit-downloads" class="d-flex gap-2 flex-wrap mb-3"></div>
                         
                         <div class="d-grid gap-2">
                             <button type="button" class="btn btn-outline-primary" id="check-status-btn">
@@ -155,7 +175,7 @@
 
     <footer class="footer">
         <div class="container text-center">
-            <p>Web Scraper com Integração LLM &copy; 2025</p>
+            <p>Web Scraper com Integração LLM &copy; 2026</p>
         </div>
     </footer>
 

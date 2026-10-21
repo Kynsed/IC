@@ -11,13 +11,16 @@ com as evidências destacadas.
 from __future__ import annotations
 
 import json
+import csv
+from html import escape
 import uuid
 from pathlib import Path
 from typing import Dict, Optional
 
 from flask import Flask, abort, request, send_file
 
-from .afirmacoes import carregar_registros
+from .afirmacoes import ler_registros
+from .contrato import loads_json
 from .config import Config
 from .relatorio import escrever_csv, escrever_html, escrever_json, gerar_html
 from .verificador import Relatorio, verificar_dados
@@ -96,6 +99,9 @@ __ERRO__
     <label>Gabarito (opcional, JSON de anotação manual)</label>
     <input type="file" name="gabarito" accept=".json">
     <small>Habilita precisão/revocação/F1 da detecção de alucinações.</small>
+    <label>Contrato JSON Schema (opcional)</label>
+    <input type="file" name="schema" accept=".json">
+    <small>Para conferir o manifesto e os hashes da execução, utilize a interface de linha de comando com os arquivos originais.</small>
   </fieldset>
 
   <button type="submit">Verificar</button>
@@ -116,7 +122,7 @@ background:#111827;color:#e5e7eb;font:14px/1.4 -apple-system,Segoe UI,Roboto,san
 def _ler_entrada(campo_arquivo: str, campo_texto: str) -> Optional[str]:
     enviado = request.files.get(campo_arquivo)
     if enviado and enviado.filename:
-        return enviado.read().decode("utf-8-sig", errors="replace")
+        return enviado.read().decode("utf-8-sig")
     texto = (request.form.get(campo_texto) or "").strip()
     return texto or None
 
@@ -132,12 +138,15 @@ def criar_app() -> Flask:
 
     @app.post("/verificar")
     def executar():
-        bruto_extracao = _ler_entrada("extracao", "extracao_texto")
-        bruto_fonte = _ler_entrada("fonte", "fonte_texto")
-
         def erro(mensagem: str, codigo: int = 400):
             return _FORMULARIO.replace(
-                "__ERRO__", f'<div class="erro">{mensagem}</div>'), codigo
+                "__ERRO__", f'<div class="erro">{escape(mensagem)}</div>'), codigo
+
+        try:
+            bruto_extracao = _ler_entrada("extracao", "extracao_texto")
+            bruto_fonte = _ler_entrada("fonte", "fonte_texto")
+        except UnicodeError:
+            return erro("Os arquivos devem usar codificação UTF-8.")
 
         if not bruto_extracao:
             return erro("Informe o arquivo de extração ou cole o JSON correspondente.")
@@ -145,47 +154,31 @@ def criar_app() -> Flask:
             return erro("Informe a fonte (HTML bruto ou texto limpo) da página.")
 
         try:
-            registros = json.loads(bruto_extracao)
-            if isinstance(registros, dict):
-                for chave in ("extracted_data", "data", "registros"):
-                    if isinstance(registros.get(chave), list):
-                        registros = registros[chave]
-                        break
-                else:
-                    registros = [registros]
-        except json.JSONDecodeError:
-            temporario = PASTA_SAIDA / f"tmp_{uuid.uuid4().hex}.csv"
-            temporario.write_text(bruto_extracao, encoding="utf-8")
-            try:
-                registros = carregar_registros(temporario)
-            except Exception as falha:      # noqa: BLE001 - reportado ao usuário
-                return erro(f"Não foi possível interpretar a extração: {falha}")
-            finally:
-                temporario.unlink(missing_ok=True)
-
-        config = Config()
-        try:
+            enviado_schema = request.files.get("schema")
+            schema = loads_json(enviado_schema.read().decode("utf-8-sig")) if enviado_schema and enviado_schema.filename else None
+            enviado_extracao = request.files.get("extracao")
+            formato = "csv" if enviado_extracao and Path(enviado_extracao.filename or "").suffix.lower() == ".csv" else "json"
+            registros = ler_registros(bruto_extracao, formato, schema)
+            config = Config()
             config.coesao_minima = float(request.form.get("coesao_minima") or 0.70)
-        except ValueError:
-            pass
-
-        gabarito = None
-        enviado = request.files.get("gabarito")
-        if enviado and enviado.filename:
-            try:
-                gabarito = json.loads(enviado.read().decode("utf-8-sig"))
-            except json.JSONDecodeError:
-                return erro("Gabarito enviado não é um JSON válido.")
-
-        tipo = {"html": "html", "texto": "text"}.get(request.form.get("tipo_fonte") or "")
-        relatorio = verificar_dados(
-            registros, bruto_fonte, config=config, gabarito=gabarito,
-            forcar_tipo_fonte=tipo,
-            origem_extracao=(request.files.get("extracao").filename
-                             if request.files.get("extracao") else "colado na interface"),
-            origem_fonte=(request.files.get("fonte").filename
-                          if request.files.get("fonte") else "colada na interface"),
-        )
+            config.validate()
+            gabarito = None
+            enviado = request.files.get("gabarito")
+            if enviado and enviado.filename:
+                gabarito = loads_json(enviado.read().decode("utf-8-sig"))
+            tipo_form = request.form.get("tipo_fonte") or ""
+            if tipo_form not in ("", "html", "texto"):
+                return erro("Tipo de fonte inválido.")
+            tipo = {"html": "html", "texto": "text"}.get(tipo_form)
+            relatorio = verificar_dados(
+                registros, bruto_fonte, config=config, gabarito=gabarito,
+                forcar_tipo_fonte=tipo, schema=schema,
+                origem_extracao=(enviado_extracao.filename if enviado_extracao else "colado na interface"),
+                origem_fonte=(request.files.get("fonte").filename
+                              if request.files.get("fonte") else "colada na interface"),
+            )
+        except (ValueError, UnicodeError, csv.Error) as falha:
+            return erro(f"Entrada inválida: {falha}")
 
         identificador = uuid.uuid4().hex[:12]
         _RELATORIOS[identificador] = relatorio
